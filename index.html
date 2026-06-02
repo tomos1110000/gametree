@@ -51,7 +51,7 @@ textarea{line-height:1.6;min-height:110px}
 <body>
 <div class="hd">
   <h1>📊 PR 成效報告產生器 <span class="badge">免費 · 無需 API Key</span></h1>
-  <p>貼上 PR TIMES 掲載メディア清單，自動比對官方廣告換算基準表（906 媒體），一鍵產出完整 PPT 報告。</p>
+  <p>貼上 PR TIMES 掲載メディア清單，自動計算各媒體廣告換算值，一鍵產出完整成效報告 PPT。</p>
 </div>
 <div class="step">
   <div class="slbl"><div class="snum">1</div><div><h2>基本資訊</h2><p>活動名稱與發稿費用</p></div></div>
@@ -64,15 +64,15 @@ textarea{line-height:1.6;min-height:110px}
 <div class="step">
   <div class="slbl"><div class="snum">2</div><div><h2>媒體轉載名單</h2><p>直接從 PR TIMES 掲載メディア頁面全選複製貼上，格式不拘</p></div></div>
   <textarea id="mlist" placeholder="直接複製 PR TIMES 後台整個表格貼上&#10;&#10;番号&#10;媒体名&#10;媒体社名&#10;URL&#10;1&#10;おたくま経済新聞&#10;...&#10;&#10;或只貼媒體名稱，一行一個也行"></textarea>
-  <p class="hint">✓ 自動去除序號、社名、URL，只保留媒體名稱進行比對</p>
-  <button class="btn-a" id="matchBtn" onclick="doMatch()">✦ 比對官方換算表 → 自動計算成效</button>
+  <p class="hint">✓ 自動去除序號、社名、URL，自動整理成媒體清單</p>
+  <button class="btn-a" id="matchBtn" onclick="doMatch()">✦ 計算媒體成效</button>
   <div class="res" id="matchRes">
     <div class="sec-ttl">成效分析結果</div>
     <div class="kpis" id="kpiRow"></div>
     <div class="mstat" id="mstat"></div>
     <div style="overflow-x:auto;margin-top:.9rem">
       <table class="mtbl">
-        <thead><tr><th>媒體名稱</th><th>梯隊</th><th>官方換算單價</th><th>備註</th></tr></thead>
+        <thead><tr><th>媒體名稱</th><th>梯隊</th><th>廣告換算值</th></tr></thead>
         <tbody id="mtBody"></tbody>
       </table>
     </div>
@@ -96,7 +96,7 @@ var PRICES = {"Scentpedia（セントペディア）":3700,"&GP":15800,"1010":60
 var C = {
   bg:'070D19', surf:'0F1C2E', surf2:'16253A', card:'0D1B2D', bord:'1A2F48',
   teal:'0EA5E9', gold:'F59E0B', grn:'10B981', wht:'FFFFFF',
-  lt:'CBD5E1', mute:'475569', tA:'0D9488', tB:'3B82F6', tC:'64748B'
+  lt:'CBD5E1', mute:'94A3B8', tA:'0D9488', tB:'3B82F6', tC:'64748B'
 };
 
 
@@ -170,7 +170,7 @@ function doMatch() {
   if (!names.length) { setS("找不到媒體名稱，請確認格式", "err"); return; }
 
   var btn = document.getElementById("matchBtn");
-  btn.disabled = true; btn.textContent = "比對中...";
+  btn.disabled = true; btn.textContent = "計算中...";
 
   var matched = [], unmatched = [];
   for (var i = 0; i < names.length; i++) {
@@ -193,13 +193,12 @@ function doMatch() {
   matchState = {matched:matched, unmatched:unmatched, totalAdVal:totalAdVal, cost:cost, roi:roi, tiers:tiers, names:names};
 
   var kpiHtml = "";
-  var kpis = [{v:total+"件",l:"刊登媒體數"},{v:fmt(totalAdVal),l:"廣告換算合計"},{v:"×"+roi,l:"費效倍率"},{v:matched.length+"/"+total,l:"換算表比對率"}];
+  var kpis = [{v:total+"件",l:"刊登媒體數"},{v:fmt(totalAdVal),l:"廣告換算合計"},{v:"×"+roi,l:"費效倍率"},];
   for (var i = 0; i < kpis.length; i++) kpiHtml += "<div class=\"kcard\"><div class=\"v\">" + kpis[i].v + "</div><div class=\"l\">" + kpis[i].l + "</div></div>";
   document.getElementById("kpiRow").innerHTML = kpiHtml;
 
-  var statHtml = "已比對 <b>" + matched.length + " 件</b>（A梯 " + tiers["A梯"].length + " / B梯 " + tiers["B梯"].length + " / C梯 " + tiers["C梯"].length + " 件）";
-  if (unmatched.length > 0) statHtml += "　<span style=\"color:#fca5a5\">" + unmatched.length + " 件未收錄</span>";
-  else statHtml += "　✓ 全部比對成功";
+  var statHtml = "共 <b>" + total + " 件</b>媒體（A梯 " + tiers["A梯"].length + " / B梯 " + tiers["B梯"].length + " / C梯 " + tiers["C梯"].length + " 件）";
+  
   document.getElementById("mstat").innerHTML = statHtml;
 
   var tcls = {"A梯":"tA","B梯":"tB","C梯":"tC"};
@@ -209,19 +208,19 @@ function doMatch() {
     var r = allRows[i];
     if (r.found) {
       var t = getTier(r.found.price);
-      tbody += "<tr><td>" + r.name + "</td><td><span class=\"tbadge " + tcls[t] + "\">" + t + "</span></td><td style=\"color:var(--teal);font-weight:600\">" + fmt(r.found.price) + "</td><td style=\"color:var(--mute);font-size:.72rem\">" + (r.found.mode !== "exact" ? r.found.key.slice(0,20) : "✓") + "</td></tr>";
+      tbody += "<tr><td>" + r.name + "</td><td><span class=\"tbadge " + tcls[t] + "\">" + t + "</span></td><td style=\"color:var(--teal);font-weight:600\">" + fmt(r.found.price) + "</td></tr>";
     } else {
-      tbody += "<tr><td>" + r.name + "</td><td><span class=\"tbadge tC\">未知</span></td><td style=\"color:#ef4444\">未收錄</td><td style=\"color:var(--mute);font-size:.72rem\">官方表無此媒體</td></tr>";
+      tbody += "<tr><td>" + r.name + "</td><td><span class=\"tbadge tC\">—</span></td><td style=\"color:#ef4444\">—</td></tr>";
     }
   }
   document.getElementById("mtBody").innerHTML = tbody;
   document.getElementById("matchRes").className = "res show";
-  setS("✓ 比對完成！廣告換算合計 " + fmt(totalAdVal) + "，費效倍率 ×" + roi, "ok");
-  btn.disabled = false; btn.textContent = "↺ 重新比對";
+  setS("✓ 計算完成！廣告換算合計 " + fmt(totalAdVal) + "，費效倍率 ×" + roi, "ok");
+  btn.disabled = false; btn.textContent = "↺ 重新計算";
 }
 
 function doGenerate() {
-  if (!matchState) { setS("請先點「比對官方換算表」", "err"); return; }
+  if (!matchState) { setS("請先點「計算媒體成效」", "err"); return; }
   var proj  = document.getElementById("proj").value || "PR報告";
   var month = document.getElementById("month").value || "";
   var comments = document.getElementById("comments").value.trim();
@@ -242,20 +241,20 @@ function doGenerate() {
   var topB = sortB.slice(0,3).map(function(r){return r.name;});
 
   var findings = [
-    "此次 PR TIMES 配信共觸達 " + ms.names.length + " 個日本媒體，依官方廣告換算基準表合計換算值達 " + fmt(ms.totalAdVal),
+    "此次 PR TIMES 配信共觸達 " + ms.names.length + " 個日本媒體，廣告換算合計達 " + fmt(ms.totalAdVal),
     "實際發稿費用 " + fmt(ms.cost) + "，廣告換算費效比高達 " + ms.roi + " 倍，遠超一般廣告投放效益",
-    tA.length > 0 ? "A梯高價值媒體（" + topA.join("、") + "等 " + tA.length + " 件）貢獻換算值 " + fmt(tvA) + "，品牌背書效果最強" : "共 " + ms.matched.length + " 件媒體成功比對官方換算表",
+    tA.length > 0 ? "A梯高價值媒體（" + topA.join("、") + "等 " + tA.length + " 件）貢獻換算值 " + fmt(tvA) + "，品牌背書效果最強" : "共 " + "共 " + ms.matched.length + " 件媒體具備廣告換算值",
     ms.names.length + " 件媒體同步建立反向連結，對官網搜尋排名具有長期 SEO 效益（未計入廣告換算值）"
   ];
 
   var recs = [
-    {title:"確認 PR TIMES 後台實際數據", content:"登入管理畫面查看各媒體轉載 PV 數、廣告換算值等實際數字，以本報告官方換算值為基準進行核對"},
+    {title:"確認 PR TIMES 後台實際數據", content:"登入管理畫面查看各媒體轉載 PV 數、廣告換算值等實際數字，以本報告數字為基準進行核對"},
     {title:"追蹤社群二次擴散", content:"配信後 7 日內追蹤各媒體的社群二次擴散數量（Twitter/X 轉推、Yahoo! JAPAN 引用等），評估實際觸及"},
     {title:"優化下次媒體組合", content: topB.length > 0 ? "建議優先爭取 " + topB.join("、") + " 等遊戲精準媒體的原創報導，而非僅 PR 稿轉載，提升觸及質量" : "建議下次配信爭取更多遊戲類精準媒體的原創報導"},
     {title:"建立媒體效益追蹤基準", content:"將本次 " + ms.names.length + " 件媒體換算值 " + fmt(ms.totalAdVal) + " 作為基準線，後續每次配信後進行對比追蹤"}
   ];
 
-  var conclusion = fmt(ms.cost) + " 的 PR TIMES 配信，依官方廣告換算基準表，" + ms.names.length + " 件轉載媒體合計廣告換算值達 " + fmt(ms.totalAdVal) + "，費效比 " + ms.roi + " 倍。A梯高流量媒體（" + tA.length + " 件）兼顧品牌背書，B梯遊戲媒體（" + tB.length + " 件）精準觸及目標受眾，是低成本高效益的品牌曝光策略，建議持續沿用於每次版本更新及 IP 聯動配信。";
+  var conclusion = fmt(ms.cost) + " 的 PR TIMES 配信，" + ms.names.length + " 件轉載媒體合計廣告換算值達 " + fmt(ms.totalAdVal) + "，費效比 " + ms.roi + " 倍。A梯高流量媒體（" + tA.length + " 件）兼顧品牌背書，B梯遊戲媒體（" + tB.length + " 件）精準觸及目標受眾，是低成本高效益的品牌曝光策略，建議持續沿用於每次版本更新及 IP 聯動配信。";
 
   var quotes = [];
   if (comments) {
@@ -312,7 +311,7 @@ async function buildPPT(name, month, ms, nav) {
   function bigStat(s,x,y,w,h,val,lbl,col){
     s.addShape('rect',{x,y,w,h,fill:{color:C.card},line:{color:col,width:2}});
     t(s,val,x+.1,y+.15,w-.2,h*.55,{fontSize:32,color:col,bold:true,align:'center'});
-    t(s,lbl,x+.1,y+h-.45,w-.2,.35,{fontSize:10,color:'94A3B8',align:'center'});
+    t(s,lbl,x+.1,y+h-.45,w-.2,.35,{fontSize:12,color:'CBD5E1',bold:true,align:'center'});
   }
 
   // ── S1: COVER ──────────────────────────────
@@ -324,18 +323,17 @@ async function buildPPT(name, month, ms, nav) {
     // main headline
     t(s,name,.5,1.0,12,.9,{fontSize:48,color:'FFFFFF',bold:true});
     t(s,'PR 轉載配信　成效報告',.5,1.95,12,.65,{fontSize:28,color:'94D8FF'});
-    t(s,month,.5,2.7,12,.4,{fontSize:14,color:'64748B'});
+    t(s,month,.5,2.7,12,.4,{fontSize:14,color:'CBD5E1'});
 
     // 4 big KPI cards
     const kpis=[
       {val:'¥'+Math.round(totalAdVal/10000*10)/10+'萬', lbl:'廣告換算合計', col:'0EA5E9'},
       {val:'×'+roi,                                      lbl:'費效倍率',     col:'F59E0B'},
       {val:names.length+'件',                            lbl:'刊登媒體數',   col:'10B981'},
-      {val:'¥'+cost.toLocaleString(),                    lbl:'實際發稿費用', col:'6366F1'},
     ];
     kpis.forEach((k,i)=>{
-      const x=.5+i*3.18;
-      bigStat(s,x,3.6,3.0,2.6,k.val,k.lbl,k.col);
+      const x=1.5+i*3.45;
+      bigStat(s,x,3.6,3.2,2.6,k.val,k.lbl,k.col);
     });
 
     // ROI callout
@@ -354,21 +352,21 @@ async function buildPPT(name, month, ms, nav) {
     t(s,'費效倍率',.4,1.25,4.2,.35,{fontSize:11,color:'F59E0B',bold:true,align:'center'});
     t(s,'×'+roi,.4,1.65,4.2,2.8,{fontSize:96,color:'F59E0B',bold:true,align:'center'});
     t(s,'花 ¥'+Math.round(cost/10000)+'萬　換 ¥'+Math.round(totalAdVal/10000*10)/10+'萬',.4,4.5,4.2,.45,{fontSize:13,color:'E2E8F0',bold:true,align:'center'});
-    t(s,'廣告換算值 ÷ 發稿費用',.4,5.0,4.2,.35,{fontSize:10,color:'64748B',align:'center'});
-    t(s,'（基於 PR TIMES 官方換算基準表）',.4,5.42,4.2,.3,{fontSize:9,color:'475569',align:'center'});
+    t(s,'廣告換算值 ÷ 發稿費用',.4,5.0,4.2,.35,{fontSize:11,color:'CBD5E1',align:'center'});
+    t(s,'',.4,5.42,4.2,.3,{fontSize:11,color:'CBD5E1',align:'center'});
 
     // Right: 3 highlight stats
     const sts=[
       {val:names.length+'件',sub:'媒體轉載',note:'涵蓋大眾、遊戲、商務三大類別',col:'0EA5E9'},
       {val:tiers['A梯'].length+'件',sub:'A梯高價值媒體',note:'單價¥20,000+ 主流大型媒體',col:'10B981'},
-      {val:matched.length+'件',sub:'官方單價比對',note:'換算依據透明，可對外說明',col:'6366F1'},
+      {val:matched.length+'件',sub:'廣告換算覆蓋',note:'換算依據透明，可對外說明',col:'6366F1'},
     ];
     sts.forEach((st,i)=>{
       const y=1.0+i*2.05;
       s.addShape('rect',{x:5.0,y,w:7.9,h:1.85,fill:{color:C.card},line:{color:st.col,width:1.5}});
       t(s,st.val,5.15,y+.1,2.5,1.1,{fontSize:42,color:st.col,bold:true});
       t(s,st.sub,7.6,y+.2,5.1,.45,{fontSize:14,color:'E2E8F0',bold:true});
-      t(s,st.note,7.6,y+.65,5.1,.45,{fontSize:10,color:'94A3B8'});
+      t(s,st.note,7.6,y+.65,5.1,.45,{fontSize:11,color:'CBD5E1'});
     });
   }
 
@@ -391,21 +389,21 @@ async function buildPPT(name, month, ms, nav) {
       s.addShape('rect',{x,y:1.0,w:4.1,h:6.15,fill:{color:C.card},line:{color:td.col,width:2}});
       rect(s,x,1.0,4.1,.65,td.col);
       t(s,td.lbl,x+.18,1.03,2,.6,{fontSize:20,color:'FFFFFF',bold:true});
-      t(s,td.sub,x+.18,1.75,3.8,.35,{fontSize:9.5,color:'CBD5E1'});
-      t(s,td.tag,x+.18,2.15,3.8,.3,{fontSize:10,color:td.col,bold:true});
+      t(s,td.sub,x+.18,1.75,3.8,.35,{fontSize:11.5,color:'CBD5E1'});
+      t(s,td.tag,x+.18,2.15,3.8,.3,{fontSize:11,color:td.col,bold:true});
       // big number
       t(s,String(td.count),x+.18,2.5,2,1.1,{fontSize:64,color:td.col,bold:true});
-      t(s,'件',x+1.65,3.32,1,.35,{fontSize:14,color:'64748B'});
+      t(s,'件',x+1.65,3.32,1,.35,{fontSize:14,color:'CBD5E1'});
       // ad value
-      t(s,'換算金額',x+.18,3.8,3.7,.28,{fontSize:9,color:'64748B'});
+      t(s,'換算金額',x+.18,3.8,3.7,.28,{fontSize:11,color:'CBD5E1'});
       t(s,'¥'+td.adv.toLocaleString(),x+.18,4.08,3.7,.5,{fontSize:20,color:'FFFFFF',bold:true});
       // bar
-      t(s,'換算佔比  '+pA+'%',x+.18,4.68,3.7,.3,{fontSize:9.5,color:'94A3B8'});
+      t(s,'換算佔比  '+pA+'%',x+.18,4.68,3.7,.3,{fontSize:11.5,color:'CBD5E1'});
       rect(s,x+.18,5.05,3.7,.2,'1E3A5F');
       if(pA>0)rect(s,x+.18,5.05,3.7*pA/100,.2,td.col);
       // top media list
       tiers[td.lbl].slice(0,3).forEach((r,j)=>{
-        t(s,'・'+r.name,x+.18,5.42+j*.42,3.7,.36,{fontSize:9.5,color:'CBD5E1'});
+        t(s,'・'+r.name,x+.18,5.42+j*.42,3.7,.36,{fontSize:11.5,color:'CBD5E1'});
       });
     });
   }
@@ -414,15 +412,15 @@ async function buildPPT(name, month, ms, nav) {
   {
     const s=pres.addSlide();
     bg(s);
-    hdr(s,'媒體廣告換算明細　官方單價一覧');
+    hdr(s,'媒體媒體廣告換算明細');
 
-    const COLS=[3.2,1.0,2.3,4.4];
-    const HDR=['媒體名稱','梯隊','廣告換算單價','比對說明'];
+    const COLS=[5.5,1.2,5.5];
+    const HDR=['媒體名稱','梯隊','廣告換算值'];
     const colX=[.35];
     COLS.forEach((w,i)=>{if(i<COLS.length-1)colX.push(colX[i]+w+.05);});
 
     rect(s,.35,1.0,12.65,.4,'111E33');
-    HDR.forEach((h2,i)=>t(s,h2,colX[i]+.1,1.05,COLS[i],.3,{fontSize:9,color:'0EA5E9',bold:true}));
+    HDR.forEach((h2,i)=>t(s,h2,colX[i]+.1,1.05,COLS[i],.3,{fontSize:11,color:'0EA5E9',bold:true}));
 
     const tcls={'A梯':'0D9488','B梯':'3B82F6','C梯':'64748B'};
     const allRows=[...[...matched].sort((a,b)=>b.found.price-a.found.price),...unmatched];
@@ -434,14 +432,12 @@ async function buildPPT(name, month, ms, nav) {
       rect(s,.35,y,12.65,rH-.03,i%2===0?'0A1628':'0D1B2D');
       const tier=r.found?getTier(r.found.price):'未知';
       const tc=tcls[tier]||'64748B';
-      t(s,r.name,colX[0]+.1,y+.06,COLS[0]-.1,rH-.15,{fontSize:10,color:'E2E8F0',valign:'middle'});
+      t(s,r.name,colX[0]+.1,y+.06,COLS[0]-.1,rH-.15,{fontSize:11,color:'E2E8F0',valign:'middle'});
       s.addShape('rect',{x:colX[1]+.05,y:y+.06,w:.82,h:rH-.18,fill:{color:tc},line:{color:tc}});
-      t(s,tier,colX[1]+.05,y+.06,.82,rH-.18,{fontSize:8.5,color:'FFFFFF',bold:true,align:'center',valign:'middle'});
-      t(s,r.found?'¥'+r.found.price.toLocaleString():'未收錄',colX[2]+.1,y+.06,COLS[2]-.1,rH-.15,{fontSize:10.5,color:r.found?'34D399':'EF4444',bold:!!r.found,valign:'middle'});
-      const note=r.found?(r.found.mode==='exact'?'✓ 精確比對':'≈ '+r.found.key.slice(0,18)):'官方表未收錄';
-      t(s,note,colX[3]+.1,y+.06,COLS[3]-.1,rH-.15,{fontSize:9,color:'64748B',valign:'middle'});
-    });
-    if(allRows.length>maxR)t(s,'＊ 共 '+allRows.length+' 件，顯示前 '+maxR+' 件',.35,H-.35,12,.28,{fontSize:9,color:'475569'});
+      t(s,tier,colX[1]+.05,y+.06,.82,rH-.18,{fontSize:11.5,color:'FFFFFF',bold:true,align:'center',valign:'middle'});
+      t(s,r.found?'¥'+r.found.price.toLocaleString():'未收錄',colX[2]+.1,y+.06,COLS[2]-.1,rH-.15,{fontSize:11.5,color:r.found?'34D399':'EF4444',bold:!!r.found,valign:'middle'});
+          });
+    if(allRows.length>maxR)t(s,'＊ 共 '+allRows.length+' 件，顯示前 '+maxR+' 件',.35,H-.35,12,.28,{fontSize:11,color:'CBD5E1'});
   }
 
   // ── S5: 費用效益 ────────────────────────────
@@ -452,14 +448,14 @@ async function buildPPT(name, month, ms, nav) {
 
     // Center: giant comparison
     s.addShape('rect',{x:.4,y:1.05,w:6.1,h:3.05,fill:{color:'081428'},line:{color:'475569',width:.5}});
-    t(s,'實際花費',.6,1.15,5,.35,{fontSize:10,color:'64748B'});
+    t(s,'實際花費',.6,1.15,5,.35,{fontSize:11,color:'CBD5E1'});
     t(s,'¥'+cost.toLocaleString(),.6,1.48,5.5,.9,{fontSize:36,color:'E2E8F0',bold:true});
 
     // Arrow
-    t(s,'▼',.4,2.55,6.1,.6,{fontSize:28,color:'475569',align:'center'});
+    t(s,'▼',.4,2.55,6.1,.6,{fontSize:28,color:'CBD5E1',align:'center'});
 
     s.addShape('rect',{x:.4,y:3.22,w:6.1,h:3.05,fill:{color:'071E10'},line:{color:'10B981',width:2}});
-    t(s,'廣告換算合計（官方換算基準表）',.6,3.32,5.5,.35,{fontSize:10,color:'10B981'});
+    t(s,'廣告換算合計',.6,3.32,5.5,.35,{fontSize:11,color:'10B981'});
     t(s,'¥'+totalAdVal.toLocaleString(),.6,3.65,5.5,.9,{fontSize:36,color:'34D399',bold:true});
     t(s,'＝ 你的 ¥'+Math.round(cost/10000)+'萬，在市場上值 ¥'+Math.round(totalAdVal/10000*10)/10+'萬',.6,4.6,5.5,.45,{fontSize:11,color:'86EFAC'});
 
@@ -470,18 +466,18 @@ async function buildPPT(name, month, ms, nav) {
 
     // Breakdown by tier
     s.addShape('rect',{x:6.85,y:4.25,w:6.1,h:2.02,fill:{color:C.card},line:{color:'1A2F48',width:.5}});
-    t(s,'換算明細',7.05,4.35,5.7,.3,{fontSize:9,color:'64748B'});
+    t(s,'換算明細',7.05,4.35,5.7,.3,{fontSize:11,color:'CBD5E1'});
     [
       {lbl:'A梯',val:tvA,col:'0D9488'},
       {lbl:'B梯',val:tvB,col:'3B82F6'},
       {lbl:'C梯',val:tvC,col:'64748B'},
     ].forEach((it,i)=>{
       const y=4.75+i*.44;
-      t(s,it.lbl,7.05,y,1,.35,{fontSize:10,color:it.col,bold:true});
-      t(s,'¥'+it.val.toLocaleString(),8.1,y,4.6,.35,{fontSize:10,color:'E2E8F0'});
+      t(s,it.lbl,7.05,y,1,.35,{fontSize:11,color:it.col,bold:true});
+      t(s,'¥'+it.val.toLocaleString(),8.1,y,4.6,.35,{fontSize:11,color:'E2E8F0'});
     });
 
-    t(s,'＊ 換算值 = 官方廣告單價合計，非實際流量保證',.4,6.4,12.5,.3,{fontSize:9,color:'334155'});
+    t(s,'',.4,6.4,12.5,.3,{fontSize:11,color:'64748B'});
   }
 
   // ── S6: 玩家聲音 ────────────────────────────
@@ -499,7 +495,7 @@ async function buildPPT(name, month, ms, nav) {
       rect(s,x,1.05,cw,.3,ac);
       t(s,'"',x+.2,1.35,1,1.0,{fontSize:64,color:ac,bold:true,valign:'top'});
       t(s,q.quote,x+.25,2.4,cw-.4,3.2,{fontSize:13,color:'F1F5F9',lineSpacingMultiple:1.5});
-      if(q.source)t(s,'— '+q.source,x+.25,5.95,cw-.4,.35,{fontSize:10,color:ac,bold:true});
+      if(q.source)t(s,'— '+q.source,x+.25,5.95,cw-.4,.35,{fontSize:11,color:ac,bold:true});
     });
   }
 
@@ -517,7 +513,7 @@ async function buildPPT(name, month, ms, nav) {
       s.addShape('rect',{x,y,w:.6,h:.6,fill:{color:c},line:{color:c}});
       t(s,'0'+(i+1),x,y,.6,.6,{fontSize:16,color:'FFFFFF',bold:true,align:'center',valign:'middle'});
       t(s,r.title,x+.72,y+.1,5.4,.42,{fontSize:13,color:'FFFFFF',bold:true});
-      t(s,r.content,x+.2,y+.68,5.9,2.0,{fontSize:10.5,color:'CBD5E1'});
+      t(s,r.content,x+.2,y+.68,5.9,2.0,{fontSize:11.5,color:'CBD5E1'});
     });
   }
 
@@ -539,9 +535,9 @@ async function buildPPT(name, month, ms, nav) {
       const x=.5+i*3.2;
       s.addShape('rect',{x,y:3.35,w:3.0,h:2.9,fill:{color:C.card},line:{color:st.col,width:2}});
       t(s,st.val,x+.1,3.55,2.8,1.5,{fontSize:38,color:st.col,bold:true,align:'center'});
-      t(s,st.lbl,x+.1,5.15,2.8,.45,{fontSize:12,color:'94A3B8',align:'center'});
+      t(s,st.lbl,x+.1,5.15,2.8,.45,{fontSize:12,color:'CBD5E1',align:'center'});
     });
-    t(s,month+'　PR TIMES 配信成效報告（廣告換算基準：PR TIMES 官方換算表）',.5,6.95,12.3,.35,{fontSize:9,color:'334155'});
+    t(s,month+'　PR TIMES 配信成效報告',.5,6.95,12.3,.35,{fontSize:11,color:'64748B'});
   }
 
   await pres.writeFile({fileName: name+'_PR成效報告_'+month+'.pptx'});
