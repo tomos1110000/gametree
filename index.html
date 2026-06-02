@@ -49,12 +49,10 @@ textarea{line-height:1.6;min-height:110px}
 </style>
 </head>
 <body>
-
 <div class="hd">
   <h1>📊 PR 成效報告產生器 <span class="badge">免費 · 無需 API Key</span></h1>
   <p>貼上 PR TIMES 掲載メディア清單，自動比對官方廣告換算基準表（906 媒體），一鍵產出完整 PPT 報告。</p>
 </div>
-
 <div class="step">
   <div class="slbl"><div class="snum">1</div><div><h2>基本資訊</h2><p>活動名稱與發稿費用</p></div></div>
   <div class="g2">
@@ -63,10 +61,9 @@ textarea{line-height:1.6;min-height:110px}
   </div>
   <div style="margin-top:.9rem"><label>PR TIMES 發稿費用（¥）</label><input type="number" id="cost" value="30000"></div>
 </div>
-
 <div class="step">
   <div class="slbl"><div class="snum">2</div><div><h2>媒體轉載名單</h2><p>直接從 PR TIMES 掲載メディア頁面全選複製貼上，格式不拘</p></div></div>
-  <textarea id="mlist" placeholder="直接複製 PR TIMES 後台整個表格貼上：&#10;&#10;1  おたくま経済新聞  シー・エス・ティー  https://otakuma.net/...&#10;2  アニメ！アニメ！  株式会社イード  https://animeanime.jp/...&#10;&#10;或只貼媒體名稱，一行一個也行"></textarea>
+  <textarea id="mlist" placeholder="直接複製 PR TIMES 後台整個表格貼上&#10;&#10;番号&#10;媒体名&#10;媒体社名&#10;URL&#10;1&#10;おたくま経済新聞&#10;...&#10;&#10;或只貼媒體名稱，一行一個也行"></textarea>
   <p class="hint">✓ 自動去除序號、社名、URL，只保留媒體名稱進行比對</p>
   <button class="btn-a" id="matchBtn" onclick="doMatch()">✦ 比對官方換算表 → 自動計算成效</button>
   <div class="res" id="matchRes">
@@ -81,89 +78,94 @@ textarea{line-height:1.6;min-height:110px}
     </div>
   </div>
 </div>
-
 <div class="step">
   <div class="slbl"><div class="snum">3</div><div><h2>玩家留言（選填）</h2><p>貼上 Twitter/X、巴哈等留言，自動整理成玩家聲音投影片</p></div></div>
   <textarea id="comments" style="min-height:100px" placeholder="「懐かしい！日本で遊べるのか」— Twitter/X&#10;「魔神英雄伝コラボ待ってた」— Twitter/X&#10;巴哈：品質很好，值得一試"></textarea>
 </div>
-
 <button class="btn-gen" id="genBtn" onclick="doGenerate()">⬇ 產生並下載 PPT 報告</button>
 <div class="sbar" id="sb"></div>
-
 <script>
-// ── Status helper ──
 function setS(msg, type) {
-  var el = document.getElementById('sb');
+  var el = document.getElementById("sb");
   el.innerHTML = msg;
-  el.className = 'sbar show ' + type;
+  el.className = "sbar show " + type;
 }
 
-// ── Official PR TIMES price table ──
 var PRICES = {"Scentpedia（セントペディア）":3700,"&GP":15800,"1010":6000,"13歳のハローワーク　公式サイト":53400,"25ansオンライン":13300,"30jewel":300,"373news.com":19100,"47NEWS":30300,"4Gamer.net（フォーゲーマードットネット）":18400,"4MEEE（フォーミー）":8700,"4yuuu! （フォーユー）":14300,"4×4MAGAZINE（フォーバイフォーマガジン）":3800,"9ポスト（ナインポスト）":4100,"@IT 自分戦略研究所":27700,"@IT（アットマーク・アイティ）":27700,"@S（アットエス）":27100,"@nifty ゲーム":11900,"@人事（アット人事）":4700,"AERA dot. (アエラドット)":42500,"AFPBB News":36000,"AFRO福岡":5000,"AKIBA PC Hotline!（アキバピーシーホットライン）":3600,"AKT　秋田テレビ web":5400,"AM（アム）":6300,"ANGIE（アンジー）":3700,"ART and ARCHITECTURE REVIEW":400,"ART iT（アートイット）":4900,"ASCII.jp（アスキージェーピー）":37400,"AUTHORs BEAUTY（オーサーズビューティ）":30300,"AUTOMATON（オートマトン）":19800,"AUTOSPORT web":26000,"AV  Watch":3600,"AWALOG（アワログ）":7400,"AdverTimes":7500,"Aging Style（エイジングスタイル）":14500,"All About（オールアバウト）":27400,"AndMore!（アンドモア）":8200,"AolNews.":178100,"AppBank":41900,"AppLibrary":1500,"AppMedia（アップメディア）":36800,"Applision（アプリジョン）":5100,"Appliv（アプリヴ）":21900,"Auto Prove（オートプルーブ）":5000,"B-plus（ビープラス）":3600,"BARKS":12400,"BASEBALL KING（ベースボールキング）":22100,"BCN Bizline":75800,"BCN RETAIL":20500,"BEAUTY EXCHANGE（ビューティーエクスチェンジ）":5900,"BIGLOBEクルマ":54200,"BIRDY（バーディ）":600,"BLOUIN ARTINFO":500,"BRASH（ブラッシュ）":2800,"BUSINESS INSIDER JAPAN":30000,"Beautyまとめ":4400,"Billboard JAPAN（ビルボード ジャパン）":12100,"Bimajin（ビマジン）":9500,"Biz/Zine（ビズジン）":5600,"BoostMagazine（ブーストマガジン）":5200,"BusinessItem通信":3000,"Buzz-Video（バズビデオ）":3200,"BuzzGang（バズギャング）":10800,"C CHANNEL（シーチャンネル）":7800,"CAMP HACK（キャンプハック）":14400,"CBCNET":14700,"CGWORLD.jp":66500,"CINEMA TOPICS ONLINE（シネマトピックス）":3100,"CINRA.NET":7900,"CIO":14700,"CNET JAPAN（シーネットジャパン）":23000,"COCONUTS JAPAN":6900,"CORISM(コリズム)":4200,"COURRiER Japon(クーリエ・ジャポン)":1500000,"CURASAW(キュラソウ)":1700,"CanCam.jp（キャンキャン）":14100,"Car Watch（カーウォッチ）":3600,"Casa BRUTUS（カーサ・ブルータス）":8200,"CoCoKARAnext（ココカラnext）":19300,"CodeZine（コードジン）":20900,"CoinDesk Japan":13500,"Computerworld":14700,"Cozreマガジン（コズレマガジン）":7800,"Cycle（サイクル）":127700,"Cyclist（サイクリスト）":149100,"DEEokinawa（でぃーおきなわ）":6200,"DIGIDAY［日本版］":5700,"DIGITAL X（デジタルクロス）":5100,"DIYer(s) （ディーアイワイヤーズ）":6500,"DRESS（ドレス）":6500,"DRMオンライン（ダイヤモンド・リテイルメディア）":19500,"Daily News Online（デイリーニュースオンライン）":7600,"Deview":9500,"Dews（デュース）":13300,"DiFa（ディーファ）":83400,"DietClub":48200,"Dtimes":81800,"E-TALENTBANK":11800,"ECzine（イーシージン）":10600,"ECのミカタ":84600,"EDA Express":4900,"EDIST.+one（エディスト）":7700,"EDN Japan":12600,"EE Times Japan":13900,"ELLE ONLINE":113800,"ELLE girl ONLINE（エル・ガール・オンライン）":75800,"ENCOUNT（エンカウント）":34000,"EX-TRAIN （エクストレイン）":4800,"EYESCREAM.JP（アイスクリーム）":13800,"Economic News":5000,"EdTechZine（エドテックジン）":4100,"Entame Plex（エンタメプレックス）":5000,"EnterJam-エンタジャム":1600,"EnterpriseZine（エンタープライズジン）":5800,"Esquire（エスクァイア・デジタル）":100,"F.M.J.（エフ・エム・ジェイ）":3700,"FASHION HEADLINE（ファッションヘッドライン）":4800,"FASHION PRESS（ファッションプレス）":22200,"FAVOR（フェイバー）":8400,"FERIC（フェリック）":1200,"FNMNL（フェノメナル）":5000,"FORZA STYLE（フォルツァスタイル）":16800,"FUTURUS（フトゥールス）":23600,"FYTTE（フィッテ）":27500,"Fashion Latte":5800,"Fashion News／WWD JAPAN":13600,"Fashion-j.com":8400,"Fashionsnap.com（ファッションスナップドットコム）":15200,"Feel KOBE":13100,"Food News Online":11100,"For M":46200,"Full-count（フルカウント）":55100,"GAL’s POP":26900,"GAME Watch（ゲームウォッチ）":3000,"GAMY（ゲーミー）":213000,"GAPSIS":4800,"GAYM":108100,"GENIC WEB":7600,"GIGAZINE（ギガジン）":837000,"GIZMODO JAPAN（ギズモードジャパン）":42000,"GLESTY.COM（グレスティドットコム）":100,"GO OUT WEB（ゴーアウトWEB）":8500,"GOODA（グーダ）":9100,"GOTRIP!":4700,"GQ JAPAN（ジーキュウジャパン）":12300,"Game Spark":15200,"GameFavo（げーむふぁぼ）":4200,"GameWith（ゲームウィズ）":51300,"Gamer":7900,"Get Navi（ゲットナビ）":13800,"GirlsNews":7200,"Glam（グラム）":3600,"Goal.com":49200,"Gourmet Biz（グルメビズ）":3700,"Gpara.com（ジーパラドットコム）":27400,"Grapps（グラップス）":12100,"HANJO HANJO（ハンジョーハンジョー）":3600,"HEALTH PRESS":6400,"HEAPS":100,"HITSPAPER":1300,"HONZ（ホンズ）":6400,"HOUYHNHNM（フイナム）":14700,"HRプロ":7800,"Harper’s BAZAAR（ハーパーズバザー）":30800,"Harumari TOKYO（ハルマリ トウキョウ）":9300,"IBC 岩手放送 web":10400,"ICT教育ニュース":5100,"IGN JAPAN":89400,"IGNITE（イグナイト）":4600,"IMATABI（イマタビ）":5600,"INSIGHT NOW!":5300,"INTERNET Watch（インターネットウォッチ）":3600,"IRORIO（イロリオ）":13600,"ISUTA（イスタ）":6900,"IT Leaders（ITリーダーズ）":7500,"IT Search+":70600,"ITmedia Mobile":70000,"ITmedia PC USER":70000,"ITmedia エグゼクティブ":3600,"ITmedia エンタープライズ":70000,"ITmedia ニュース":70000,"ITmedia ビジネスオンライン":70000,"ITmedia マーケティング":6100,"ITmedia（アイティメディア）":375000,"ITライフハック":4600,"Impress Innovation Lab.":3800,"It Mama（イットママ）":42700,"Iwanichi Online":6700,"J-CASTニュース":66800,"J:COM":50800,"JBPress(日本ビジネスプレス)":32000,"JDN":13100,"JFA.jp":100900,"JJnet（ジェイジェイネット）":6600,"JLEAGUE.jp（Jリーグ.jp）":31600,"JMAG NEWS（ジェイマグニュース）":2500,"JOY FM(FM宮崎)":3100,"JP PET NEWS":5400,"Japaaanマガジン（ジャパーンマガジン）":13100,"Japan Girls Style":3400,"Japan Today":223300,"Jpubb":1200,"Jタウンネット":28100,"KAI-YOU.net（カイユウネット）":27600,"KENCHIKU":23300,"KZONE-Money":100,"Kappo":3400,"Kirei Style":4300,"Kstyle":23600,"LAURIER PRESS（ローリエプレス）":12900,"LAWRENCE（ロレンス）":6700,"LAXIC（ラシク）":3000,"LIMO（リーモ）":42700,"LINEトラベルjp":13800,"LIVERARY":5400,"LNEWS":15500,"LOVEGREEN（ラブグリーン）":26400,"Level High!":4800,"Lmaga.jp":28200,"M-ON! Press（エムオンプレス）":11600,"MANTANWEB（まんたんウェブ）":15100,"MAQUIA ONLINE（マキア）":11700,"MASHING UP（マッシングアップ）":3700,"MATCHA（マッチャ）":16800,"MAiDiGiTV（マイデジTV）":3700,"MELLOW(メロウ)":3500,"MENDY（メンディ）":4200,"MERY（メリー）":9900,"MODE PRESS":156600,"MOGU2NEWS もぐもぐニュース":3000,"MONEY VOICE（マネーボイス）":28900,"MONEYzine（マネージン）":21200,"MONOist（モノイスト）":22700,"MOTA（モータ）":275600,"MY LOHAS（マイロハス）":91600,"MYLOHAS（マイロハス）":21700,"MarkeZine（マーケジン）":11900,"MdN Design Interactive":186500,"Mega Brasil（メガブラジル）":6600,"Menjoy!（メンジョイ）":96600,"Men’s Beauty（メンズビューティー）":13400,"Middle Edge（ミドルエッジ）":10200,"Movie Collection":3900,"Movie Walker（ムービーウォーカー）":16100,"MusicVoice（ミュージックヴォイス）":7500,"Musicman-NET":4300,"MyNewsJapan":8200,"NAVI ON THE WHEELS":2600,"NEUT Magazine（ニュートマガジン）":3500,"NEWSポストセブン":37500,"NOMOOO（ノモー）":7000,"NST FAN SITE":4100,"Narinari.com（ナリナリドットコム）":12800,"NeoL（ネオエル）":7400,"News Lounge":4800,"Newton press web":27100,"Nicheee！（ニッチー！）":3600,"Numero TOKYO":27300,"OKMusic":6000,"ONLINE GAME ZOOM":3900,"OPENERS":5000,"ORICON NEWS（オリコンニュース）":33500,"OSDN Magazine（オーエスディーエヌマガジン）":4500,"OTOTOY（オトトイ）":10600,"OZ mall（オズモール）":22300,"Omosan STREET":4800,"OnlineGamer":4000,"Otajo（オタ女）":3300,"PANORA（パノラ）":11000,"PASH! PLUS（パッシュプラス）":5500,"PC Watch":3600,"PERLU（プルル）":25500,"PETomorrow（ペットゥモロー）":23900,"PREMIUM JAPAN（プレミアムジャパン）":4700,"PRINT&PROMOTION（プリント＆プロモーション）":5000,"PRONEWS（プロニュース）":7000,"Pakila":2300,"PetSmilenews（ペットスマイルニュース）":10600,"Phile web（ファイル・ウェブ）":22400,"Pouch（ポーチ）":15200,"PridalTIMES（プライダルタイムズ）":5000,"QLife（キューライフ）":27000,"Qetic":5200,"Qoly（コリー）":23000,"Qrun（キュルン）":12300,"R.E.port":6400,"RBB TODAY":28900,"RETRIP（リトリップ）":5500,"RISFAX（リスファックス）":20300,"RKB毎日放送（アール･ケー･ビー毎日放送）":17500,"Record China（レコードチャイナ）":16200,"Response":31500,"Rhythm Station エフエム山形":300,"Rhythm（リズム）":41500,"S-MAX":11800,"SAKETIMES（サケタイムズ）":6300,"SANSPO.COM":24300,"SHIFT+LOCAL（シフトローカル）":3000,"SHONAN garden（湘南ガーデン）":4600,"SIGN（サイン）":45500,"SNOWBOARD NETWORK FREERUN":5300,"SOCCER KING（サッカーキング）":24900,"SPACE SHOWER TV.COM":56000,"SPICE（スパイス）":15000,"SPUR.JP":16400,"STRAIGHT PRESS（ストレートプレス）":4100,"STUDIO VOICE":4500,"SUUMOジャーナル（スーモジャーナル）":77400,"SankeiBiz":226700,"ScanNetSecurity":6400,"Security Next":11200,"Selectbox（セレクトボックス）":3900,"ShoeCream":1100,"Shopping Tribe（ショッピング トライブ）":5100,"Shuffle（シャッフル）":3300,"Social Game Info":11400,"Spincoaster（スピンコースター）":4000,"Sponichi Annex（スポニチ アネックス）":32900,"Stereo Sound ONLINE":59800,"Suits-woman.jp（スーツウーマン）":25500,"Sustainable Brands Japan（SB-J）サステナブル・ブランド ジャパン":5400,"TABI LABO（タビラボ）":14500,"TABIZINE（タビジン）":11400,"TABROOM（タブルーム）":12000,"TASCLAP（タスクラップ）":14800,"TEND（テンド）":3100,"THE BRIDGE（ザ・ブリッジ）":12800,"THE HUFFINGTON POST（ハフィントンポスト）":318100,"THE RAKE（ザ・レイク）":3900,"THE SHONAN MAG（湘南マグ）":1800,"THE TENNIS DAILY（テニスデイリー）":27000,"TOKYO POP LINE":24300,"TOKYO Web":38400,"TRAVEL JOURNAL GATEWAY（トラベルジャーナルゲートウェイ）":3900,"TRILL（トリル）":25800,"TRIPPING!（トリッピング）":3700,"TRiP EDiTOR（トリップエディター）":8500,"TSURI HACK（釣りハック）":16500,"TechCrunch（テッククランチ） Japan":393700,"TechFactory（テックファクトリー）":7500,"TechTargetジャパン":23400,"TechWave（テックウェーブ）":3800,"Techinsight（テックインサイト）":13700,"The STYLE INSIGHT（スタイルインサイト）":1700,"ThinkIT（シンクイット）":5400,"Time Out Tokyo（タイムアウト東京）":22700,"Touch Lab （タッチ ラボ）":6200,"Traicy（とらいしー）":15000,"UWASA[ウワサ]":44500,"Up to you!（アップトゥーユー）":5800,"VAMOLA eFootball News":4800,"VIPCARモバイルマガジン":17300,"VOCE（ヴォーチェ）":16800,"VOGUE JAPAN（ヴォーグジャパン）":13000,"VOGUE Wedding（ヴォーグウェディング）":111800,"VOGUEGIRL（ヴォーグガール）":17900,"VOKKA（ヴォッカ）":10000,"VentureTimes（ベンチャーズタイムズ）":4500,"Viewpoint":5200,"WEB TOKACHI":13600,"WEB-NILE（ウェブナイル）":7900,"WEBみんぽう":6000,"WEDGE Infinity（ウェッジ）?":23300,"WOMAGAzine-ウーマガジン-":50000,"WOW!Korea":17400,"WWSチャンネル":6700,"Walkerplus":29200,"WebLeaf（ウェブリーフ）":9800,"Web　Newtype":10400,"Web「悠＋」":100,"Web担当者Forum":22200,"Web東奥":21100,"Wedding Emmy":3600,"WinterPLUS":17500,"WirelessWire News（ワイヤレスワイヤーニュース）":6100,"With online":12100,"WizBiz":4200,"Woman Money（ウーマンマネー）":1500,"Woman Wellness Online（ウーマンウェルネスオンライン）":29900,"Woman type（ウーマンタイプ）":21000,"WomanSmartLife（ウーマンスマートライフ）":2200,"Work Master":4000,"YAMA HACK（ヤマハック）":15400,"YES!!!!":3100,"YOGA ROOM":31600,"YOMIURI ONLINE 大手小町":8700,"YOMIURI ONLINE（ヨミウリ オンライン）":8900,"YUCASEE MEDIA":5000,"Yahoo!映像トピックス":324500,"ZAKZAK":30500,"ZDNet Japan（ジーディーネット ジャパン）":18800,"ZUU Online（ズー・オンライン":12100,"alterna（オルタナ）":6800,"andGIRL（アンドガール）":7300,"andronavi":93000,"apparel-web.com":3900,"asoview!TRIP":21000,"avanti online":3800,"beauty news tokyo":3800,"beauty news tokyo（ビューティニューストーキョー）":7100,"bmr.jp":24900,"builder by ZDNet Japan":62500,"business network.jp":5700,"by-S（バイエス）":7200,"cake.tokyo（ケイクドットトーキョー）":9600,"cazual（カズアル）":3100,"cinemacafe.net":15600,"clicccar.com（クリッカー）":254200,"closet（クローゼット）":35300,"cocoa（ココア）":3000,"curet （キュレット）":105400,"d.365":50300,"dressing（ドレッシング）":36300,"dwango.jp news（ドワンゴジェイピーニュース）":14500,"eSampo":6300,"ecocolo.com":1100,"engadget（エンガジェット）":516700,"envy":300,"ethica（エシカ）":5100,"fabcross":13300,"favy（ファビー）":10900,"geared":23900,"gihyo.jp":14400,"girls walker（ガールズウォーカー）":7800,"gooゲーム":34500,"goo自動車&バイク":22100,"grape（グレイプ）":28200,"greenz.jp":5800,"hatena":78800,"honeyee.com（ハニカム）":3600,"humhug.net":400,"iNSIDE（インサイド）":14200,"iPhone Mania（アイフォンマニア）":25600,"icotto（イコット）":19000,"itSnapマガジン":3400,"iza:イザ！":28400,"karuizawa Web":5700,"kireicom（キレイコム）":700,"kufura（クフラ）":9400,"macaroni［マカロニ］":30600,"mamaPRESS -ママプレス":16300,"mamagirl（ママガール）":12300,"masimaro（マシマロ）":56800,"meet i [ミートアイ]":4300,"mi-mollet（ミモレ）":39500,"michill（ミチル）":16400,"mitok（ミトク）":12500,"mobileASCII":3900,"model picks（モデルピックス）":100,"modelpress（モデルプレス）":31300,"mofmo（モフモ）":10000,"music.jpニュース":11800,"natureasia.com":62500,"navicon（ナビコン）":5300,"nizista（ニジスタ）":3000,"numan(ヌーマン)":8000,"onyourmark":8800,"otalab":4900,"otocoto（オトコト）":5500,"ovo（オーヴォ）":3900,"peco（ペコ）":8100,"rockinon.com（ロッキング オン ドットコム）":10600,"roomie":123200,"sabra（サブラ）":5600,"saitaPULS（サイタプラス）":11900,"sheage（シェアージュ）":4400,"sippo（シッポ）":10200,"smart FLASH（スマートフラッシュ）":22800,"snacks!":4800,"spopre":600,"style-arena.jp（スタイルアリーナ）":3800,"techable（テッカブル）":7400,"telling（テリング）":5800,"the woof":600,"tokila（トキラ）":3800,"totoONE（トトワン）":29400,"verita（ヴェリタ）":3000,"videlicio.us（ビデリシャス）":6400,"warpweb（ワープウェブ）":3000,"web Sportiva（スポルティーバ）":15800,"webCG":221600,"webDICE（ウェブダイス）":19600,"withnews（ウィズニュース）":29400,"woman excite（ウーマンエキサイト）":33400,"womenjapan.com（ウーマンジャパンドットコム）":7100,"wowGame（ワウゲーム）":7700,"yomiDr（YOMIURI ONLINE）":26400,"yummy!（ヤミー！）":30800,"【いちご情報限定】いちご大学":5000,"【フレンチブルドッグ限定】FRENCH BULLDOG LIFE":7900,"【横浜・みなとみらい限定】はまこれ横浜":9900,"【京都限定】KYOTOSIDE":6800,"【広域逗子葉山圏限定】逗子葉山経済新聞":4900,"【滋賀県限定】しがトコ":5600,"【柴犬限定】Shiba-Inu Life（柴犬ライフ）":17900,"【神戸限定】神戸経済ニュース":4400,"【石川県、富山県、福井県限定】金沢日和":6600,"【大学スポーツ限定】4years.（フォーイヤーズ）":8200,"【大阪限定】大阪ルッチ":10700,"【東京限定】東京ルッチ":11300,"【名古屋限定】IDENTITY名古屋（アイデンティティ名古屋）":5900,"【輸入車・外車限定】CURRENT LIFE（カレントライフ）":66900,"＠DIME（アットダイム）":13400,"＠Heaaart":3600,"♯CBK magazine（カブキマガジン）":6200,"あいらいふ":6400,"あたらしい経済":4100,"あべの経済新聞":7900,"あんふぁんWEB":7500,"いこーよ":8300,"うまい肉":10680,"えんウチ":5300,"えん乗り":4700,"えん食べ":11700,"おいしいもの探し隊！":3100,"おうちごはん":5600,"おきなわ物語":13600,"おた☆スケ":4300,"おたくま経済新聞":20400,"おためしコスメナビ":3900,"おためし新商品ナビ":5000,"お笑いナタリー":202100,"くらテク":375000,"くるまのニュース":63400,"こえぽた":22500,"こそだて":3200,"ことりっぷWEB":11100,"ごきげん手帖":100,"さばなび":3400,"しらべぇ":14600,"しろぼんねっと":6250,"だんべー.com":10200,"つやプラ（TSUYAPLUS）":8200,"どうしんウェブ（北海道新聞）":29000,"ながさきプレスWEB":5600,"なんば経済新聞":8000,"にじめん":13300,"ねとらぼ":19200,"はい！よろこんで":4800,"はてなニュース":4900,"びわ湖大津経済新聞":9000,"ぴあ映画生活":85200,"ぶっくPRねっと":4800,"まいじつ":53800,"まぐまぐニュース（MAG2NEWS）":29500,"まちづくりニュース":200,"みんゆうNet（福島民友新聞）":13400,"もぐナビニュース":14800,"らばQ":13800,"るるぶ&more.":15000,"わんちゃんホンポ":24700,"アキバ経済新聞":6900,"アキバ総研":13700,"アゴラ":16700,"アサジョ":6800,"アサ芸プラス":18700,"アジアンビート":26300,"アニメ！アニメ！":14500,"アニメ！アニメ！ビズ":800,"アニメイトタイムズ（animate Times）":19500,"アニメハック":12100,"アニメボックス":3100,"アプリのまじん":800,"アプリオ":42200,"アプリゲット":16100,"アメーバニュース":13200,"アロハストリート・ドットコム":4500,"アンドロック":40400,"イーファイト":30100,"イドカバネット":21200,"イベニア":4400,"イベニュー":4800,"インターネットコム":4000,"インテリア情報サイト":3100,"ウレぴあ総研":106800,"エコガイド":100,"エフエム岩手公式サイト":5900,"エミダスマガジン":115700,"エンジニアtype":27500,"エンタメOVO（エンタメオーヴォ）":3800,"エンタメコリア":20300,"オクトバ":3600,"オタク産業通信":6800,"オトナンサー":12300,"オトメスゴレン":8200,"オンラインインテリアビジネスニュース":5500,"カナロコ":22700,"カラパイア":15800,"カワコレメディア":3300,"ガールズリサーチプレス（GRP）":49700,"ガジェット通信":19000,"キーマンズネット":12700,"キタコレ！":5500,"キッズgoo":31100,"キナリノ":22900,"キャリコネニュース":29300,"クラウド Watch（クラウドウォッチ）":3600,"クラベリア":3700,"クランクイン！":20000,"クランクイン！トレンド":20000,"グローバルニュースアジア":4500,"ケータイ Watch（ケータイウォッチ）":3600,"ゲーム攻略完全図鑑":17100,"ゲキサカ":26600,"ココフル":3000,"コミックナタリー":202100,"コロカル":8200,"ゴゴ通信":3300,"ゴルフ情報ALBA.net":15800,"ゴング格闘技":25500,"サーチナ":241700,"サーフィン＠マガジン":3600,"サカエ経済新聞":5900,"サッカーダイジェストweb":30100,"ザイ・オンライン":65600,"ザテレビジョン":28100,"シェアしたくなる法律相談所":18000,"シティリビングWeb":7500,"シニアガイド":4700,"シネマトゥデイ":14700,"シブヤ経済新聞":8700,"ジャパン・レストラン.net":100,"ジョルダンニュース":7100,"スキンケア大学":55900,"スゴモリ":1000,"ステージナタリー":202100,"スポーツワン":25300,"スポーツ報知":41600,"スマートジャパン":103800,"スマホ&モバイルクーポン最新情報":3600,"セルフドクターネット":6000,"タイムアウト東京":34800,"タウンマガジンいわき":4800,"ダ・ヴィンチNEWS（ダヴィンチニュース）?":52600,"ダイヤモンド・オンライン":65000,"チェッカーズ！":3600,"チケットぴあ":118800,"チャリティーニュース":4800,"テレビドガッチ":10900,"デーリー東北新聞社 Online Service":13600,"デイリースポーツ ONLINE":34300,"デイリーポータルZ":152700,"デジカメ Watch（デジカメウォッチ）":3600,"デジタル毎日":616800,"デパチカドットコム":3000,"デンリュウサイタマ":600,"トラベル watch":3000,"トラベルビジョン":11600,"トラベルブック":32600,"トラベルボイス":14200,"トランジスタ技術":5900,"トリドリ":9300,"トレタメ":6000,"ナース専科":175000,"ナース専科plus":175000,"ナタリー":69600,"ナデシコクッキング":600,"ニコニコニュース":22200,"ニュースイッチ":21900,"ニュース体験.jp":4800,"ニンプス":8600,"ネタとぴ":14300,"ネットショップ担当者フォーラム":15700,"ネットベンチャーニュース":3600,"ハウコレ":9600,"ハレルヤ":4800,"バイクブロス／バージンドゥカティ":48900,"ビジネス+IT":123900,"フードスタジアム":6300,"フードリンクニュース":7000,"ファスニングジャーナル":4200,"ファミ通.com（ファミツウドットコム）":30200,"ファミ通App":26000,"ファンファン福岡":13100,"フィールドキャスター":800,"フォーカス台湾":8500,"フォーサイト":27900,"フットボールチャンネル":31100,"ブライダルスタイル":4800,"ブロコリ":3100,"ベースボールチャンネル":24900,"ベストカーWeb":43900,"ベストプレゼント":36600,"ベビーカレンダー":18800,"ベリーダンス・ジャパンWEB（Bellydance JAPAN）":400,"ペットタイムズ":3600,"ペット生活":100,"ペット大好き！":5700,"ペトハピ":4000,"ポイ探ニュース":6600,"マイナビウーマン":33100,"マイナビティーンズ":3000,"マイナビニュース":71800,"マイナビ学生の窓口":16100,"マイナビ賃貸":142900,"マイライフニュース":3100,"マガジンサミット":3300,"ママスタセレクト":36200,"ママリ（mamari）":16100,"マリンダイビングウェブ":15000,"マンガごっちゃ":44900,"ミーティア（MEETIA）":5800,"メカニカル・テック":1000,"モーニングスター":222600,"モノレコ":3500,"ヨガジャーナルオンライン":31200,"ヨコハマ経済新聞":20500,"ヨムーノ":55200,"ライフハッカー":17900,"ラジオライフ.com":8300,"リセマム":30700,"リビングくらしナビ":25200,"リファイドニュース":4800,"ルトロン":4100,"レタスクラブニュース":30500,"レンタル＆シェアニュース":3000,"ローチケHMVニュース":23000,"ローリングストーン日本版":11600,"ロイター":39400,"ログミー":25200,"ロケットニュース24":30000,"ロピロピ":3600,"愛カツ":125700,"伊勢新聞":6300,"医中誌Web":101900,"茨城新聞クロスアイ":15400,"飲食業界.com":200,"烏丸経済新聞":5300,"映画ナタリー":202100,"映画ランド":5600,"横須賀経済新聞":4700,"沖縄タイムス":22700,"音楽ナタリー":202100,"下北沢経済新聞":5600,"下野新聞「SOON」":24400,"価格.comマガジン":13600,"家men":100,"家の時間":1800,"家電 Watch（家電ウォッチ）":3600,"河北新報":28700,"介護ニュース":4800,"学研キッズネット":12900,"葛飾経済新聞":9300,"環境ビジネスオンライン":7500,"甘党男子（あまだん）":5100,"関西のつり":4300,"岩手日報 Web News":15500,"吉祥寺経済新聞":5700,"宮崎日日新聞":7700,"京橋経済新聞":4600,"京都新聞":29600,"教育技術.net":13700,"金沢日和":6600,"銀座経済新聞":4600,"銀座新聞ニュース":800,"激ロック":7600,"結婚準備室":7700,"月刊総務オンライン":5800,"健康メディア.com":5700,"犬吉猫吉 PLUS":3000,"幻冬舎plus（幻冬舎プラス）":6900,"広島ニュース 食べタインジャー":14000,"広島ホームテレビ":32900,"広島経済新聞":8600,"航空人WEB／航空専門サイト":16900,"高校生新聞":16700,"高校野球ドットコム":21300,"婚活ニュース":3000,"財経新聞":8600,"埼玉新聞":28000,"札幌経済新聞":8700,"山形新聞":17500,"山口宇部経済新聞":8900,"山口新聞":6600,"山梨日日新聞":17600,"産経ニュース":58400,"市ケ谷経済新聞":7200,"時遊zine（ジユウジン）":3500,"耳マン":4200,"自由が丘経済新聞":5500,"趣通信":3300,"秋田経済新聞":9700,"終活WEBソナエ":3800,"週刊アスキー":21500,"週刊観光経済新聞":4300,"週刊東洋経済プラス":42800,"住宅新報Web":4900,"女子Ryu":3000,"女子SPA！":13600,"女子部JAPAN(・v・)":3400,"女子旅press（女子旅プレス）":5100,"女子力アップCafe  Googirl":13800,"女性自身":36900,"松山経済新聞":4900,"松本経済新聞":6200,"笑うメディア クレイジー":23500,"障がい者雇用インフォメーション":4800,"上毛新聞ニュース":25400,"上野経済新聞":4300,"乗りものニュース":60600,"食@新製品":8700,"食楽web":15400,"信毎web":76300,"新R25":7000,"新刊JPニュース":4900,"新宿経済新聞":7500,"神戸経済新聞":8200,"神戸新聞NEXT":41600,"神田経済新聞":4400,"水戸経済新聞":7700,"盛岡経済新聞":5800,"声優グランプリWEB":5200,"西日本新聞":28600,"石垣経済新聞":4400,"石垣島検島誌.com":200,"赤坂経済新聞":4800,"千葉日報":22700,"専門家ProFile":6700,"窓の杜":3600,"荘内日報":5900,"装苑ONLINE（装苑オンライン）":4700,"大阪日日新聞":14300,"大人の健康生活ガイド":700,"大人の社会見学":3000,"大分経済新聞":5500,"中国新聞アルファ":22100,"中日新聞":51400,"朝鮮日報日本語版":252000,"朝日新聞デジタル＆w":33600,"調布経済新聞":9400,"超！アニメディア":4600,"長崎新聞":8300,"通販通信":9300,"通訳翻訳WEB":2400,"鉄鋼新聞":6900,"天神経済新聞":6200,"電撃オンライン":13600,"電撃ホビーウェブ":96400,"島根日日新聞":5900,"投資信託最新情報":4800,"東スポWeb":31200,"東京カメラガールズ":3400,"東京バーゲンマニア":11300,"東京ベイ経済新聞":4900,"東京経済ニュース":9200,"東洋経済オンライン":74100,"糖尿病ネットワーク":14600,"糖尿病リソースガイド":7900,"徳島新聞web":13000,"独女 （DOKUJO）":3800,"栃ナビ！":22200,"奈良経済新聞":4400,"奈良新聞":8400,"那覇経済新聞":4600,"日刊SPA！":40300,"日刊ゲンダイ":24500,"日刊ゴールデンチャート":74800,"日刊スポーツ":22300,"日刊建設工業新聞":12900,"日刊工業新聞":128700,"日刊自動車新聞":12500,"日刊大衆":80500,"日経 xTECH（クロステック）":27400,"日経 xTECH（クロステック）IT（情報技術）":512100,"日経 xTECH（クロステック）PC":512100,"日経 xTECH（クロステック）建築・住宅":512100,"日経 xTECH（クロステック）土木":512100,"日経DUAL（デュアル）":9100,"日経クロストレンド （Web）":9400,"日経不動産マーケット情報（Web）":7000,"日本の人事部":28700,"日本ネット経済新聞":4600,"日本人材ニュース":9900,"日本農業新聞":54300,"入学準備 学習幼稚園":13700,"梅田経済新聞":9800,"博多経済新聞":7600,"八王子経済新聞":8000,"美的.com":12700,"美容最新ニュース":1800,"姫路経済新聞":8300,"品川経済新聞":12700,"富山新聞":21900,"富士山経済新聞":6100,"福井新聞":25600,"文化通信.com":5400,"保険市場TIMES":27400,"暮らしニスタ":11500,"暮らし上手":27300,"萌えドロイド":6800,"北日本新聞":16000,"北國新聞":21900,"毎日キレイ":14900,"満点笑":4800,"名駅経済新聞":6700,"薬事日報":9700,"立川経済新聞":12900,"流通ニュース":112200,"琉球新報":21400,"旅MUSE（タビミューズ）":3300,"旅キッズ":3600,"旅色":59300,"旅色プラス":3800,"緑のgoo":38500,"臨床神経学":28900,"六本木経済新聞":5900};
 
-// ── Find price for a media name ──
 function findPrice(name) {
-  if (PRICES[name] !== undefined) return {price: PRICES[name], key: name, mode: 'exact'};
-  var norm = name.replace(/[（(][^）)]*[）)]/g, '').trim();
-  if (norm !== name && PRICES[norm] !== undefined) return {price: PRICES[norm], key: norm, mode: 'partial'};
+  if (PRICES[name] !== undefined) return {price: PRICES[name], key: name, mode: "exact"};
+  var norm = name.replace(/[（(][^）)]*[）)]/g, "").trim();
+  if (norm !== name && PRICES[norm] !== undefined) return {price: PRICES[norm], key: norm, mode: "partial"};
   var keys = Object.keys(PRICES);
   for (var i = 0; i < keys.length; i++) {
     var k = keys[i];
-    if (k.indexOf(name) !== -1 || name.indexOf(k) !== -1) return {price: PRICES[k], key: k, mode: 'fuzzy'};
+    if (k.indexOf(name) !== -1 || name.indexOf(k) !== -1) return {price: PRICES[k], key: k, mode: "fuzzy"};
   }
   var short = name.slice(0, 4);
   if (short.length >= 4) {
     for (var j = 0; j < keys.length; j++) {
-      if (keys[j].indexOf(short) === 0) return {price: PRICES[keys[j]], key: keys[j], mode: 'keyword'};
+      if (keys[j].indexOf(short) === 0) return {price: PRICES[keys[j]], key: keys[j], mode: "keyword"};
     }
   }
   return null;
 }
 
 function getTier(price) {
-  if (price >= 20000) return 'A梯';
-  if (price >= 8000) return 'B梯';
-  return 'C梯';
+  if (price >= 20000) return "A梯";
+  if (price >= 8000) return "B梯";
+  return "C梯";
 }
 
-function fmt(n) { return '¥' + n.toLocaleString(); }
+function fmt(n) { return "¥" + n.toLocaleString(); }
 
-// ── Global state ──
 var matchState = null;
 
-// ── Step 2: Match media ──
 function doMatch() {
-  var raw = document.getElementById('mlist').value.trim();
-  if (!raw) { setS('請先貼上媒體名單', 'err'); return; }
+  var raw = document.getElementById("mlist").value.trim();
+  if (!raw) { setS("請先貼上媒體名單", "err"); return; }
 
-  // Parse: handle PR TIMES table paste or plain list
-  var lines = raw.split('
-');
+  var lines = raw.split("\n");
   var names = [];
   var seen = {};
+  var hasURL = false;
+  for (var i = 0; i < lines.length; i++) {
+    if (/^https?:\/\//.test(lines[i].trim())) { hasURL = true; break; }
+  }
+
+  var skipWords = {"番号":1,"媒体名":1,"媒体社名":1,"URL":1,"掲載メディア":1};
+  var companyWords = ["株式会社","有限会社","合同会社","編集部","グループ","合同会社"];
+
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i].trim();
     if (!line) continue;
-    // Remove leading number
-    line = line.replace(/^\d+\s+/, '');
-    // Remove URL part
-    var urlIdx = line.indexOf('http');
-    if (urlIdx > 0) line = line.slice(0, urlIdx).trim();
-    // Split by tab or 2+ spaces, take first column
-    var cols = line.split(/	|  +/);
-    var mname = cols[0].trim();
-    // Remove company suffix
-    mname = mname.replace(/\s*(株式会社|有限会社|合同会社).*$/, '').trim();
-    if (mname && !seen[mname]) { names.push(mname); seen[mname] = true; }
+    if (hasURL) {
+      if (/^\d+$/.test(line)) continue;
+      if (/^https?:\/\//.test(line)) continue;
+      if (skipWords[line]) continue;
+      var isCompany = false;
+      for (var c = 0; c < companyWords.length; c++) {
+        if (line.indexOf(companyWords[c]) !== -1) { isCompany = true; break; }
+      }
+      if (isCompany) continue;
+      if (line && !seen[line]) { names.push(line); seen[line] = true; }
+    } else {
+      line = line.replace(/^\d+\s+/, "");
+      var urlIdx = line.indexOf("http");
+      if (urlIdx > 0) line = line.slice(0, urlIdx).trim();
+      var cols = line.split(/\t|  +/);
+      var mname = cols[0].trim();
+      mname = mname.replace(/\s*(株式会社|有限会社|合同会社).*$/, "").trim();
+      if (mname && !skipWords[mname] && !seen[mname]) { names.push(mname); seen[mname] = true; }
+    }
   }
 
-  if (!names.length) { setS('找不到媒體名稱，請確認貼上格式', 'err'); return; }
+  if (!names.length) { setS("找不到媒體名稱，請確認格式", "err"); return; }
 
-  var btn = document.getElementById('matchBtn');
-  btn.disabled = true; btn.textContent = '比對中...';
+  var btn = document.getElementById("matchBtn");
+  btn.disabled = true; btn.textContent = "比對中...";
 
-  var matched = [];
-  var unmatched = [];
+  var matched = [], unmatched = [];
   for (var i = 0; i < names.length; i++) {
     var found = findPrice(names[i]);
     if (found) matched.push({name: names[i], found: found});
@@ -173,124 +175,104 @@ function doMatch() {
   var totalAdVal = 0;
   for (var i = 0; i < matched.length; i++) totalAdVal += matched[i].found.price;
 
-  var cost = parseInt(document.getElementById('cost').value) || 30000;
+  var cost = parseInt(document.getElementById("cost").value) || 30000;
   var roi = Math.round(totalAdVal / cost);
   var total = names.length;
-
-  var tiers = {'A梯': [], 'B梯': [], 'C梯': []};
+  var tiers = {"A梯": [], "B梯": [], "C梯": []};
   for (var i = 0; i < matched.length; i++) {
-    var t = getTier(matched[i].found.price);
-    tiers[t].push(matched[i]);
+    tiers[getTier(matched[i].found.price)].push(matched[i]);
   }
 
-  matchState = {matched: matched, unmatched: unmatched, totalAdVal: totalAdVal, cost: cost, roi: roi, tiers: tiers, names: names};
+  matchState = {matched:matched, unmatched:unmatched, totalAdVal:totalAdVal, cost:cost, roi:roi, tiers:tiers, names:names};
 
-  // Render KPIs
-  var kpis = [
-    {v: total + '件', l: '刊登媒體數'},
-    {v: fmt(totalAdVal), l: '廣告換算合計'},
-    {v: '×' + roi, l: '費效倍率'},
-    {v: matched.length + '/' + total, l: '換算表比對率'}
-  ];
-  var kpiHtml = '';
-  for (var i = 0; i < kpis.length; i++) {
-    kpiHtml += '<div class="kcard"><div class="v">' + kpis[i].v + '</div><div class="l">' + kpis[i].l + '</div></div>';
-  }
-  document.getElementById('kpiRow').innerHTML = kpiHtml;
+  var kpiHtml = "";
+  var kpis = [{v:total+"件",l:"刊登媒體數"},{v:fmt(totalAdVal),l:"廣告換算合計"},{v:"×"+roi,l:"費效倍率"},{v:matched.length+"/"+total,l:"換算表比對率"}];
+  for (var i = 0; i < kpis.length; i++) kpiHtml += "<div class=\"kcard\"><div class=\"v\">" + kpis[i].v + "</div><div class=\"l\">" + kpis[i].l + "</div></div>";
+  document.getElementById("kpiRow").innerHTML = kpiHtml;
 
-  // Render stat
-  document.getElementById('mstat').innerHTML = '已比對 <b>' + matched.length + ' 件</b>（A梯 ' + tiers['A梯'].length + ' 件 / B梯 ' + tiers['B梯'].length + ' 件 / C梯 ' + tiers['C梯'].length + ' 件）' + (unmatched.length > 0 ? '　<span style="color:#fca5a5">' + unmatched.length + ' 件未收錄於官方表</span>' : '　✓ 全部比對成功');
+  var statHtml = "已比對 <b>" + matched.length + " 件</b>（A梯 " + tiers["A梯"].length + " / B梯 " + tiers["B梯"].length + " / C梯 " + tiers["C梯"].length + " 件）";
+  if (unmatched.length > 0) statHtml += "　<span style=\"color:#fca5a5\">" + unmatched.length + " 件未收錄</span>";
+  else statHtml += "　✓ 全部比對成功";
+  document.getElementById("mstat").innerHTML = statHtml;
 
-  // Render table
-  var tcls = {'A梯': 'tA', 'B梯': 'tB', 'C梯': 'tC', '未知': 'tC'};
-  var rows = matched.concat(unmatched);
-  var tbody = '';
-  for (var i = 0; i < rows.length; i++) {
-    var r = rows[i];
+  var tcls = {"A梯":"tA","B梯":"tB","C梯":"tC"};
+  var allRows = matched.concat(unmatched);
+  var tbody = "";
+  for (var i = 0; i < allRows.length; i++) {
+    var r = allRows[i];
     if (r.found) {
       var t = getTier(r.found.price);
-      tbody += '<tr><td>' + r.name + '</td><td><span class="tbadge ' + tcls[t] + '">' + t + '</span></td><td style="color:var(--teal);font-weight:600">' + fmt(r.found.price) + '</td><td style="color:var(--mute);font-size:.72rem">' + (r.found.mode !== 'exact' ? r.found.key.slice(0,20) : '✓') + '</td></tr>';
+      tbody += "<tr><td>" + r.name + "</td><td><span class=\"tbadge " + tcls[t] + "\">" + t + "</span></td><td style=\"color:var(--teal);font-weight:600\">" + fmt(r.found.price) + "</td><td style=\"color:var(--mute);font-size:.72rem\">" + (r.found.mode !== "exact" ? r.found.key.slice(0,20) : "✓") + "</td></tr>";
     } else {
-      tbody += '<tr><td>' + r.name + '</td><td><span class="tbadge tC">未知</span></td><td style="color:#ef4444;font-style:italic">未收錄</td><td style="color:var(--mute);font-size:.72rem">官方表無此媒體</td></tr>';
+      tbody += "<tr><td>" + r.name + "</td><td><span class=\"tbadge tC\">未知</span></td><td style=\"color:#ef4444\">未收錄</td><td style=\"color:var(--mute);font-size:.72rem\">官方表無此媒體</td></tr>";
     }
   }
-  document.getElementById('mtBody').innerHTML = tbody;
-  document.getElementById('matchRes').className = 'res show';
-  setS('✓ 比對完成！廣告換算合計 ' + fmt(totalAdVal) + '，費效倍率 ×' + roi, 'ok');
-  btn.disabled = false; btn.textContent = '↺ 重新比對';
+  document.getElementById("mtBody").innerHTML = tbody;
+  document.getElementById("matchRes").className = "res show";
+  setS("✓ 比對完成！廣告換算合計 " + fmt(totalAdVal) + "，費效倍率 ×" + roi, "ok");
+  btn.disabled = false; btn.textContent = "↺ 重新比對";
 }
 
-// ── Step 3: Generate PPT ──
 function doGenerate() {
-  if (!matchState) { setS('請先點「比對官方換算表」', 'err'); return; }
-  var proj  = document.getElementById('proj').value || 'PR報告';
-  var month = document.getElementById('month').value || '';
-  var comments = document.getElementById('comments').value.trim();
-  var btn = document.getElementById('genBtn');
-  btn.disabled = true; btn.textContent = '產生中...';
-  setS('<span class="spin"></span>產生 PPT 中，請稍候...', 'info');
+  if (!matchState) { setS("請先點「比對官方換算表」", "err"); return; }
+  var proj  = document.getElementById("proj").value || "PR報告";
+  var month = document.getElementById("month").value || "";
+  var comments = document.getElementById("comments").value.trim();
+  var btn = document.getElementById("genBtn");
+  btn.disabled = true; btn.textContent = "產生中...";
+  setS("<span class=\"spin\"></span>產生 PPT 中，請稍候...", "info");
 
   var ms = matchState;
-  var tA = ms.tiers['A梯'];
-  var tB = ms.tiers['B梯'];
-  var tC = ms.tiers['C梯'];
-  var tierAdValA = 0; for(var i=0;i<tA.length;i++) tierAdValA += tA[i].found.price;
-  var tierAdValB = 0; for(var i=0;i<tB.length;i++) tierAdValB += tB[i].found.price;
-  var tierAdValC = 0; for(var i=0;i<tC.length;i++) tierAdValC += tC[i].found.price;
+  var tA = ms.tiers["A梯"], tB = ms.tiers["B梯"], tC = ms.tiers["C梯"];
+  var tvA = 0, tvB = 0, tvC = 0;
+  for (var i=0;i<tA.length;i++) tvA += tA[i].found.price;
+  for (var i=0;i<tB.length;i++) tvB += tB[i].found.price;
+  for (var i=0;i<tC.length;i++) tvC += tC[i].found.price;
 
-  var sortedA = tA.slice().sort(function(a,b){return b.found.price-a.found.price;});
-  var sortedB = tB.slice().sort(function(a,b){return b.found.price-a.found.price;});
-  var topA = sortedA.slice(0,3).map(function(r){return r.name;});
-  var topB = sortedB.slice(0,3).map(function(r){return r.name;});
+  var sortA = tA.slice().sort(function(a,b){return b.found.price-a.found.price;});
+  var sortB = tB.slice().sort(function(a,b){return b.found.price-a.found.price;});
+  var topA = sortA.slice(0,3).map(function(r){return r.name;});
+  var topB = sortB.slice(0,3).map(function(r){return r.name;});
 
   var findings = [
-    '此次 PR TIMES 配信共觸達 ' + ms.names.length + ' 個日本媒體，依官方廣告換算基準表合計換算值達 ' + fmt(ms.totalAdVal),
-    '實際發稿費用 ' + fmt(ms.cost) + '，廣告換算費效比高達 ' + ms.roi + ' 倍，遠超一般廣告投放效益',
-    tA.length > 0 ? 'A梯高價值媒體（' + topA.join('、') + '等 ' + tA.length + ' 件）貢獻換算值 ' + fmt(tierAdValA) + '，品牌背書效果最強' : '共 ' + ms.matched.length + ' 件媒體成功比對官方換算表，換算依據透明可追溯',
-    ms.names.length + ' 件媒體同步建立反向連結，對官網搜尋排名具有長期 SEO 效益（未計入廣告換算值）'
+    "此次 PR TIMES 配信共觸達 " + ms.names.length + " 個日本媒體，依官方廣告換算基準表合計換算值達 " + fmt(ms.totalAdVal),
+    "實際發稿費用 " + fmt(ms.cost) + "，廣告換算費效比高達 " + ms.roi + " 倍，遠超一般廣告投放效益",
+    tA.length > 0 ? "A梯高價值媒體（" + topA.join("、") + "等 " + tA.length + " 件）貢獻換算值 " + fmt(tvA) + "，品牌背書效果最強" : "共 " + ms.matched.length + " 件媒體成功比對官方換算表",
+    ms.names.length + " 件媒體同步建立反向連結，對官網搜尋排名具有長期 SEO 效益（未計入廣告換算值）"
   ];
 
   var recs = [
-    {title: '確認 PR TIMES 後台實際數據', content: '登入管理畫面查看各媒體轉載 PV 數、廣告換算值等實際數字，以本報告官方換算值為基準進行核對'},
-    {title: '追蹤社群二次擴散', content: '配信後 7 日內追蹤各媒體的社群二次擴散數量（Twitter/X 轉推、Yahoo! JAPAN 引用等），評估實際觸及'},
-    {title: '優化下次媒體組合', content: topB.length > 0 ? '建議優先爭取 ' + topB.join('、') + ' 等遊戲精準媒體的原創報導，而非僅 PR 稿轉載，提升觸及質量' : '建議下次配信爭取更多遊戲類精準媒體的原創報導'},
-    {title: '建立媒體效益追蹤基準', content: '將本次 ' + ms.names.length + ' 件媒體換算值 ' + fmt(ms.totalAdVal) + ' 作為基準線，後續每次配信後進行對比追蹤'}
+    {title:"確認 PR TIMES 後台實際數據", content:"登入管理畫面查看各媒體轉載 PV 數、廣告換算值等實際數字，以本報告官方換算值為基準進行核對"},
+    {title:"追蹤社群二次擴散", content:"配信後 7 日內追蹤各媒體的社群二次擴散數量（Twitter/X 轉推、Yahoo! JAPAN 引用等），評估實際觸及"},
+    {title:"優化下次媒體組合", content: topB.length > 0 ? "建議優先爭取 " + topB.join("、") + " 等遊戲精準媒體的原創報導，而非僅 PR 稿轉載，提升觸及質量" : "建議下次配信爭取更多遊戲類精準媒體的原創報導"},
+    {title:"建立媒體效益追蹤基準", content:"將本次 " + ms.names.length + " 件媒體換算值 " + fmt(ms.totalAdVal) + " 作為基準線，後續每次配信後進行對比追蹤"}
   ];
 
-  var conclusion = fmt(ms.cost) + ' 的 PR TIMES 配信，依官方廣告換算基準表，' + ms.names.length + ' 件轉載媒體合計廣告換算值達 ' + fmt(ms.totalAdVal) + '，費效比 ' + ms.roi + ' 倍。A梯高流量媒體（' + tA.length + ' 件）兼顧品牌背書，B梯遊戲媒體（' + tB.length + ' 件）精準觸及目標受眾，是低成本高效益的品牌曝光策略，建議持續沿用於每次版本更新及 IP 聯動配信。';
+  var conclusion = fmt(ms.cost) + " 的 PR TIMES 配信，依官方廣告換算基準表，" + ms.names.length + " 件轉載媒體合計廣告換算值達 " + fmt(ms.totalAdVal) + "，費效比 " + ms.roi + " 倍。A梯高流量媒體（" + tA.length + " 件）兼顧品牌背書，B梯遊戲媒體（" + tB.length + " 件）精準觸及目標受眾，是低成本高效益的品牌曝光策略，建議持續沿用於每次版本更新及 IP 聯動配信。";
 
   var quotes = [];
   if (comments) {
-    var clines = comments.split('
-');
+    var clines = comments.split("\n");
     for (var i = 0; i < clines.length && quotes.length < 3; i++) {
       var cl = clines[i].trim();
       if (!cl) continue;
-      var di = cl.lastIndexOf('—');
-      if (di > 0) quotes.push({quote: cl.slice(0,di).trim().replace(/^[「『"']|[」』"']$/g,''), source: cl.slice(di+1).trim()});
-      else quotes.push({quote: cl.replace(/^[「『"']|[」』"']$/g,''), source: ''});
+      var di = cl.lastIndexOf("—");
+      if (di > 0) quotes.push({quote: cl.slice(0,di).trim().replace(/^[「『"']|[」』"']$/g,""), source: cl.slice(di+1).trim()});
+      else quotes.push({quote: cl.replace(/^[「『"']|[」』"']$/g,""), source: ""});
     }
   }
 
-  var nav = {findings: findings, recommendations: recs, conclusion: conclusion, voiceQuotes: quotes,
-             tierAdValA: tierAdValA, tierAdValB: tierAdValB, tierAdValC: tierAdValC};
+  var nav = {findings:findings, recommendations:recs, conclusion:conclusion, voiceQuotes:quotes, tvA:tvA, tvB:tvB, tvC:tvC};
 
-  // Use setTimeout to let the UI update first
   setTimeout(function() {
-    try {
-      buildPPT(proj, month, ms, nav).then(function() {
-        setS('✅ 完成！已下載 ' + proj + '_PR成效報告_' + month + '.pptx', 'ok');
-        btn.disabled = false; btn.textContent = '⬇ 產生並下載 PPT 報告';
-      }).catch(function(e) {
-        setS('❌ PPT 產生失敗：' + e.message, 'err');
-        console.error(e);
-        btn.disabled = false; btn.textContent = '⬇ 產生並下載 PPT 報告';
-      });
-    } catch(e) {
-      setS('❌ 錯誤：' + e.message, 'err');
+    buildPPT(proj, month, ms, nav).then(function() {
+      setS("✅ 完成！已下載 " + proj + "_PR成效報告_" + month + ".pptx", "ok");
+      btn.disabled = false; btn.textContent = "⬇ 產生並下載 PPT 報告";
+    }).catch(function(e) {
+      setS("❌ PPT 產生失敗：" + e.message, "err");
       console.error(e);
-      btn.disabled = false; btn.textContent = '⬇ 產生並下載 PPT 報告';
-    }
+      btn.disabled = false; btn.textContent = "⬇ 產生並下載 PPT 報告";
+    });
   }, 100);
 }
 
@@ -406,7 +388,6 @@ async function buildPPT(name, month, ms, nav) {
 
   await pres.writeFile({fileName: name+'_PR成效報告_'+month+'.pptx'});
 }
-
 </script>
 </body>
 </html>
