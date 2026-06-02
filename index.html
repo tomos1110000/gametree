@@ -81,8 +81,8 @@ textarea{line-height:1.6;min-height:110px}
 </div>
 
 <div class="step" id="s2">
-  <div class="slbl"><div class="snum">2</div><div><h2>媒體轉載名單</h2><p>從 PR TIMES 後台複製媒體名稱，一行一個（支援日文全名）</p></div></div>
-  <textarea id="mlist" placeholder="ニコニコニュース&#10;Game Spark&#10;アニメ！アニメ！&#10;おたくま経済新聞&#10;...">ニコニコニュース
+  <div class="slbl"><div class="snum">2</div><div><h2>媒體轉載名單</h2><p>直接複製 PR TIMES 掲載メディア頁面的表格內容貼上，不用整理格式</p></div></div>
+  <textarea id="mlist" placeholder="直接從 PR TIMES 後台複製整個表格貼上即可，格式隨意：&#10;&#10;1  おたくま経済新聞  シー・エス・ティー  https://otakuma.net/...&#10;2  アニメ！アニメ！  株式会社イード  https://animeanime.jp/...&#10;&#10;或是只貼媒體名稱，一行一個也行">ニコニコニュース
 Game Spark
 iNSIDE（インサイド）
 アニメ！アニメ！
@@ -109,7 +109,7 @@ RBB TODAY
 コミックナタリー
 音楽ナタリー
 映画ナタリー</textarea>
-  <p class="hint">直接貼 PR TIMES 管理畫面的媒體名稱欄，全名比對最準確</p>
+  <p class="hint">✓ 支援直接複製 PR TIMES 後台整個掲載メディア表格貼上，自動抽取媒體名稱</p>
   <button class="btn-a" onclick="doMatch()" id="matchBtn">✦ 比對官方換算表 → 自動計算成效</button>
 
   <div class="res" id="matchRes">
@@ -200,7 +200,26 @@ function fmt(n) { return '¥' + n.toLocaleString(); }
 let matchState = null;
 
 function doMatch() {
-  const names = document.getElementById('mlist').value.trim().split('\n').map(s=>s.trim()).filter(Boolean);
+  const rawLines = document.getElementById('mlist').value.trim().split('\n');
+  // Smart extractor: handles PR TIMES table paste (number + name + company + URL)
+  // or plain media name list
+  const names = rawLines.map(line => {
+    line = line.trim();
+    if (!line) return null;
+    // Remove leading number + whitespace (e.g. "1  " or "27 ")
+    line = line.replace(/^\d+\s+/, '');
+    // If line contains a URL, take only the part before the URL
+    const urlIdx = line.search(/https?:\/\//);
+    if (urlIdx > 0) line = line.slice(0, urlIdx).trim();
+    // If multiple tab/space-separated columns remain, the first column is the media name
+    // Split by 2+ spaces or tab
+    const cols = line.split(/\t|  +/);
+    // First col is media name; second is usually company name (株式会社 etc) — skip it
+    let mediaName = cols[0].trim();
+    // Remove trailing company-like suffixes that might have been captured
+    mediaName = mediaName.replace(/\s*(株式会社|有限会社|合同会社).*$/, '').trim();
+    return mediaName || null;
+  }).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i); // dedupe
   if (!names.length) { setS('請先填入媒體名單', 'err'); return; }
 
   const btn = document.getElementById('matchBtn');
