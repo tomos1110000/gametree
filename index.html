@@ -273,8 +273,8 @@ async function doGenerate() {
     B梯: tiers['B梯'].reduce((s,r)=>s+r.found.price,0),
     C梯: tiers['C梯'].reduce((s,r)=>s+r.found.price,0)
   };
-  const topA = tiers['A梯'].sort((a,b)=>b.found.price-a.found.price).slice(0,3).map(r=>r.name);
-  const topB = tiers['B梯'].sort((a,b)=>b.found.price-a.found.price).slice(0,3).map(r=>r.name);
+  const topA = [...tiers['A梯']].sort((a,b)=>b.found.price-a.found.price).slice(0,3).map(r=>r.name);
+  const topB = [...tiers['B梯']].sort((a,b)=>b.found.price-a.found.price).slice(0,3).map(r=>r.name);
 
   // Auto-generate findings from data
   const findings = [
@@ -323,6 +323,11 @@ async function buildPPT(name, month, ms, nav) {
   pres.layout = 'LAYOUT_WIDE';
   const W=13.33, H=7.5;
   const {matched,unmatched,totalAdVal,cost,roi,tiers,names} = ms;
+  const tierAdVal = {
+    'A梯': tiers['A梯'].reduce((s,r)=>s+r.found.price,0),
+    'B梯': tiers['B梯'].reduce((s,r)=>s+r.found.price,0),
+    'C梯': tiers['C梯'].reduce((s,r)=>s+r.found.price,0)
+  };
   const findings   = nav?.findings   || ['此次 PR TIMES 配信成效優良','廣告換算達到極高費效比','精準觸及目標受眾媒體','SEO 長期效益不計入換算'];
   const recs       = nav?.recommendations || [{title:'確認後台數據',content:'至 PR TIMES 管理畫面核對實際 PV 數'},{title:'追蹤二次擴散',content:'配信後 7 日內追蹤社群分享數量'},{title:'優化媒體組合',content:'次次配信可嘗試爭取原創報導'},{title:'建立追蹤基準',content:'以本次數據為長期比較基準'}];
   const conclusion = nav?.conclusion  || `¥${cost.toLocaleString()} 的 PR TIMES 配信，依官方換算表合計廣告換算值達 ¥${totalAdVal.toLocaleString()}，費效比 ${roi} 倍。建議持續沿用此策略。`;
@@ -375,7 +380,7 @@ async function buildPPT(name, month, ms, nav) {
   rect(s,.35,1.1,12.65,.42,C.surf2);
   HDR.forEach((h2,i)=>t(s,h2,colX[i]+.1,1.15,COLS[i],.32,{fontSize:9,color:C.teal,bold:true}));
   const tc2={'A梯':C.tA,'B梯':C.tB,'C梯':C.tC,'未知':C.tC};
-  const allRows=[...matched.sort((a,b)=>b.found.price-a.found.price),...unmatched];
+  const allRows=[...[...matched].sort((a,b)=>b.found.price-a.found.price),...unmatched];
   const maxR=Math.min(allRows.length,12);const rH=Math.min(.47,(H-1.8)/maxR);
   allRows.slice(0,maxR).forEach((r,i)=>{const y=1.55+i*rH;rect(s,.35,y,12.65,rH-.03,i%2===0?C.card:'0b1624');
     const tier=r.found?getTier(r.found.price):'未知';const tc=tc2[tier]||C.tC;
