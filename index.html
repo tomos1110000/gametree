@@ -165,6 +165,13 @@ function fmt(n) { return '¥' + n.toLocaleString(); }
 
 let matchState = null;
 
+
+function setS(msg, type) {
+  const el = document.getElementById('sb');
+  el.innerHTML = msg;
+  el.className = 'sbar show ' + type;
+}
+
 function doMatch() {
   const rawLines = document.getElementById('mlist').value.trim().split('\n');
   // Smart extractor: handles PR TIMES table paste (number + name + company + URL)
