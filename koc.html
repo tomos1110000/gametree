@@ -6,9 +6,9 @@
 <title>KOC 月報產生器</title>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <style>
-:root{--bg:#07101f;--surf:#0f1c2e;--surf2:#162440;--card:#0c1828;--bord:#1a2f48;--teal:#0ea5e9;--gold:#f59e0b;--grn:#10b981;--purple:#818cf8;--lt:#e2e8f0;--mute:#64748b;--rad:10px}
+:root{--bg:#07101f;--surf:#0f1c2e;--surf2:#162440;--card:#0c1828;--bord:#1a2f48;--teal:#0ea5e9;--gold:#f59e0b;--grn:#10b981;--purple:#818cf8;--red:#f87171;--lt:#e2e8f0;--mute:#64748b;--rad:10px}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'Hiragino Sans','Noto Sans TC',sans-serif;background:var(--bg);color:var(--lt);min-height:100vh;padding:2rem 1.5rem;max-width:960px;margin:0 auto}
+body{font-family:-apple-system,'Hiragino Sans','Noto Sans TC',sans-serif;background:var(--bg);color:var(--lt);min-height:100vh;padding:2rem 1.5rem;max-width:980px;margin:0 auto}
 h1{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.3rem}
 .sub{color:var(--mute);font-size:.85rem;margin-bottom:2rem;line-height:1.6}
 .badge{display:inline-block;padding:.15rem .55rem;background:#1e1b4b;color:#a5b4fc;border-radius:4px;font-size:.72rem;font-weight:600;margin-left:.5rem;vertical-align:middle}
@@ -18,33 +18,39 @@ h1{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.3rem}
 .stitle h2{font-size:.9rem;font-weight:600;color:#fff}
 .stitle p{font-size:.75rem;color:var(--mute);margin-top:.1rem}
 label{display:block;font-size:.76rem;color:var(--mute);margin-bottom:.3rem;font-weight:500}
-input[type=text],input[type=number],input[type=url],textarea{width:100%;background:var(--bg);border:1px solid var(--bord);border-radius:8px;color:var(--lt);font-size:.88rem;padding:.55rem .75rem;outline:none;font-family:inherit;transition:border-color .15s}
-input:focus,textarea:focus{border-color:var(--teal)}
+input[type=text],input[type=number],input[type=url],textarea,select{width:100%;background:var(--bg);border:1px solid var(--bord);border-radius:8px;color:var(--lt);font-size:.88rem;padding:.55rem .75rem;outline:none;font-family:inherit;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--teal)}
 textarea{resize:vertical;line-height:1.6;min-height:80px}
+select option{background:var(--surf)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.8rem}
 
-/* Video cards */
-.video-list{display:flex;flex-direction:column;gap:.8rem;margin-top:.8rem}
-.video-card{background:var(--surf2);border:1px solid var(--bord);border-radius:8px;padding:1rem}
-.video-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
-.video-num{font-size:.72rem;color:var(--teal);font-weight:600}
-.btn-del-video{background:transparent;border:none;color:var(--mute);cursor:pointer;font-size:.85rem;padding:.2rem .4rem;border-radius:4px;transition:color .15s}
-.btn-del-video:hover{color:#ef4444}
+/* Content cards */
+.content-list{display:flex;flex-direction:column;gap:.9rem;margin-top:.8rem}
+.content-card{border-radius:8px;padding:1rem;border:1.5px solid var(--bord)}
+.content-card.type-video{border-color:#0ea5e9;background:#071828}
+.content-card.type-live{border-color:#818cf8;background:#0e0a28}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
+.card-type-badge{font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:4px}
+.badge-video{background:#0c2b5a;color:#60a5fa}
+.badge-live{background:#1e1b4b;color:#a5b4fc}
+.btn-del{background:transparent;border:none;color:var(--mute);cursor:pointer;font-size:.82rem;padding:.2rem .5rem;border-radius:4px;transition:color .15s}
+.btn-del:hover{color:#ef4444}
+
+/* Type selector */
+.type-selector{display:flex;gap:.5rem;margin-bottom:.9rem}
+.type-btn{flex:1;padding:.5rem;border-radius:8px;border:1.5px solid var(--bord);background:transparent;color:var(--mute);font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center}
+.type-btn.sel-video{border-color:#0ea5e9;color:#0ea5e9;background:#071828}
+.type-btn.sel-live{border-color:#818cf8;color:#818cf8;background:#0e0a28}
+
 .btn-add{width:100%;margin-top:.6rem;padding:.5rem;background:transparent;border:1px dashed var(--bord);border-radius:8px;color:var(--mute);font-size:.82rem;cursor:pointer;font-family:inherit;transition:all .15s}
 .btn-add:hover{border-color:var(--teal);color:var(--teal)}
-
-/* Last month panel */
 .lastmonth{background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:1rem;margin-top:.8rem}
-.lm-title{font-size:.75rem;color:var(--mute);font-weight:600;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center}
-.lm-badge{font-size:.7rem;background:#0c2b5a;color:var(--teal);padding:.1rem .4rem;border-radius:4px}
-.lm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.lm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-top:.6rem}
 .lm-item{text-align:center}
-.lm-val{font-size:1rem;font-weight:700;color:var(--teal)}
-.lm-lbl{font-size:.68rem;color:var(--mute);margin-top:.1rem}
-
-/* Generate */
+.lm-val{font-size:.95rem;font-weight:700;color:var(--teal)}
+.lm-lbl{font-size:.65rem;color:var(--mute);margin-top:.1rem}
 .btn-gen{width:100%;margin-top:1.4rem;padding:.95rem;background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;border-radius:var(--rad);color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s}
 .btn-gen:hover{opacity:.88}.btn-gen:disabled{opacity:.4;cursor:not-allowed}
 .sbar{margin-top:.9rem;padding:.75rem 1rem;border-radius:8px;font-size:.82rem;display:none}
@@ -55,234 +61,244 @@ textarea{resize:vertical;line-height:1.6;min-height:80px}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes sp{to{transform:rotate(360deg)}}
 .hint{font-size:.72rem;color:var(--mute);margin-top:.35rem}
-.divider{border:none;border-top:1px solid var(--bord);margin:1rem 0}
+.section-tag{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.7rem;font-weight:600;margin-bottom:.6rem}
+.tag-video{background:#0c2b5a;color:#60a5fa}
+.tag-live{background:#1e1b4b;color:#a5b4fc}
 </style>
 </head>
 <body>
+<h1>🎬 KOC 月報產生器 <span class="badge">影片 + 直播</span></h1>
+<p class="sub">支援一般影片與直播穿插合作，各自計算成效指標，一鍵產出完整 PPT 月報。<br>上個月數據自動帶入，下次打開直接對比。</p>
 
-<h1>🎬 KOC 月報產生器 <span class="badge">情境 B · 固定合作</span></h1>
-<p class="sub">填入本月影片數據，自動與上月對比，一鍵產出完整 PPT 月報。<br>上個月的數據會自動記住，下次打開直接帶入。</p>
-
-<!-- S1: KOC 基本資訊 -->
+<!-- S1 基本資訊 -->
 <div class="step">
-  <div class="stitle"><div class="snum">1</div><div><h2>KOC 基本資訊</h2><p>頻道資料與本月報告月份</p></div></div>
+  <div class="stitle"><div class="snum">1</div><div><h2>KOC 基本資訊</h2></div></div>
   <div class="g2">
-    <div><label>KOC / 頻道名稱</label><input type="text" id="kocName" placeholder="例：ゲーム実況チャンネル〇〇"></div>
+    <div><label>KOC / 頻道名稱</label><input type="text" id="kocName" placeholder="例：鋼嵐チャンネル"></div>
     <div><label>報告月份</label><input type="text" id="reportMonth" placeholder="例：2025年6月"></div>
   </div>
-  <div style="margin-top:.9rem"><label>YouTube 頻道連結（選填）</label><input type="url" id="channelUrl" placeholder="https://www.youtube.com/@..."></div>
-  <div style="margin-top:.9rem"><label>頻道訂閱數</label><input type="number" id="subscribers" placeholder="例：85000"></div>
+  <div class="g2" style="margin-top:.9rem">
+    <div><label>YouTube 頻道連結（選填）</label><input type="url" id="channelUrl" placeholder="https://www.youtube.com/@..."></div>
+    <div><label>頻道訂閱數</label><input type="number" id="subscribers" placeholder="例：85000"></div>
+  </div>
 </div>
 
-<!-- S2: 費用 -->
+<!-- S2 費用 -->
 <div class="step">
   <div class="stitle"><div class="snum">2</div><div><h2>本月費用</h2><p>影片製作費與廣告授權費分開填寫</p></div></div>
   <div class="g2">
-    <div><label>影片製作費（¥）</label><input type="number" id="costVideo" placeholder="0"></div>
-    <div><label>廣告授權費（¥）</label><input type="number" id="costLicense" placeholder="0"></div>
+    <div><label>影片製作費（¥）</label><input type="number" id="costVideo" placeholder="0" oninput="updateCostTotal()"></div>
+    <div><label>廣告授權費（¥）</label><input type="number" id="costLicense" placeholder="0" oninput="updateCostTotal()"></div>
   </div>
   <div id="costTotal" style="margin-top:.6rem;font-size:.82rem;color:var(--teal)"></div>
 </div>
 
-<!-- S3: 影片數據 -->
+<!-- S3 內容數據 -->
 <div class="step">
-  <div class="stitle"><div class="snum">3</div><div><h2>本月影片數據</h2><p>每支影片填一張，最多5支</p></div></div>
-  <div class="video-list" id="videoList"></div>
-  <button class="btn-add" id="addVideoBtn" onclick="addVideo()">＋ 新增影片</button>
+  <div class="stitle"><div class="snum">3</div><div><h2>本月內容數據</h2><p>影片與直播可以混合新增，最多 5 筆</p></div></div>
+  <div class="content-list" id="contentList"></div>
+  <button class="btn-add" id="addBtn" onclick="addContent('video')">
+    ＋ 新增影片 &nbsp;|&nbsp; <span style="color:var(--purple)">直播請點右側 ▶</span>
+  </button>
+  <div style="display:flex;gap:.5rem;margin-top:.5rem">
+    <button class="btn-add" style="flex:1" onclick="addContent('video')">＋ 新增一般影片</button>
+    <button class="btn-add" style="flex:1;border-color:var(--purple);color:var(--purple)" onclick="addContent('live')">＋ 新增直播場次</button>
+  </div>
 </div>
 
-<!-- S4: 上月數據（自動帶入） -->
+<!-- S4 上月對比 -->
 <div class="step">
-  <div class="stitle"><div class="snum">4</div><div><h2>上月數據對比</h2><p>自動從上次記錄帶入，也可手動調整</p></div></div>
+  <div class="stitle"><div class="snum">4</div><div><h2>上月數據對比</h2><p>自動帶入，可手動調整</p></div></div>
   <div class="lastmonth">
-    <div class="lm-title">
-      <span id="lastMonthLabel">上月數據</span>
-      <span class="lm-badge" id="lastMonthBadge">尚無記錄</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <span id="lmLabel" style="font-size:.78rem;color:var(--mute)">上月數據</span>
+      <span id="lmBadge" style="font-size:.7rem;background:var(--card);color:var(--mute);padding:.1rem .4rem;border-radius:4px">尚無記錄</span>
     </div>
     <div class="lm-grid">
-      <div class="lm-item"><div class="lm-val" id="lmViews">—</div><div class="lm-lbl">總觀看數</div></div>
-      <div class="lm-item"><div class="lm-val" id="lmLikes">—</div><div class="lm-lbl">總按讚數</div></div>
-      <div class="lm-item"><div class="lm-val" id="lmComments">—</div><div class="lm-lbl">總留言數</div></div>
+      <div class="lm-item"><div class="lm-val" id="lmVideoViews">—</div><div class="lm-lbl">影片觀看</div></div>
+      <div class="lm-item"><div class="lm-val" id="lmVideoEng">—</div><div class="lm-lbl">影片互動率</div></div>
+      <div class="lm-item"><div class="lm-val" id="lmLivePeak">—</div><div class="lm-lbl">直播峰值</div></div>
+      <div class="lm-item"><div class="lm-val" id="lmLiveViews">—</div><div class="lm-lbl">直播觀看</div></div>
       <div class="lm-item"><div class="lm-val" id="lmCPV">—</div><div class="lm-lbl">CPV</div></div>
     </div>
   </div>
-  <div class="hint" style="margin-top:.6rem">✓ 產出報告後，本月數據會自動存為下個月的「上月對比」</div>
+  <p class="hint" style="margin-top:.5rem">✓ 產出報告後本月數據自動存為下月對比基準</p>
 </div>
 
-<!-- S5: 留言 -->
+<!-- S5 留言 -->
 <div class="step">
-  <div class="stitle"><div class="snum">5</div><div><h2>代表性留言（選填）</h2><p>從影片評論區複製，格式不拘</p></div></div>
-  <textarea id="comments" placeholder="「このゲーム懐かしい！」— コメント欄&#10;「コラボ期待してます」— コメント欄&#10;巴哈：內容很扎實，有說到重點"></textarea>
-  <div style="margin-top:.9rem"><label>遊戲相關留言數（選填）— 留言中提到遊戲名稱、角色、活動等的則數</label><input type="number" id="gameComments" placeholder="例：12" style="margin-bottom:.3rem"><p class="hint">用來計算「精準留言率」，說明觀眾是真的有興趣的玩家</p></div>
+  <div class="stitle"><div class="snum">5</div><div><h2>代表性留言（選填）</h2><p>影片評論區或直播聊天室都可以</p></div></div>
+  <textarea id="comments" placeholder="「このゲーム懐かしい！」— コメント欄&#10;「コラボ期待してます」— 直播聊天室&#10;巴哈：內容很扎實，有說到重點"></textarea>
+  <div style="margin-top:.9rem">
+    <label>遊戲相關留言數（選填）— 提到遊戲名稱、角色、活動的則數</label>
+    <input type="number" id="gameComments" placeholder="例：12">
+    <p class="hint">用來計算精準留言率，說明觸及的是真正有興趣的玩家</p>
+  </div>
 </div>
 
 <button class="btn-gen" id="genBtn" onclick="doGenerate()">⬇ 產生並下載月報 PPT</button>
 <div class="sbar" id="sb"></div>
 
 <script>
-// ── Storage helpers ──
-var STORE_KEY = 'koc_lastmonth_v1';
-
-function saveLastMonth(data) {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch(e) {}
-}
-function loadLastMonth() {
-  try { var d = localStorage.getItem(STORE_KEY); return d ? JSON.parse(d) : null; } catch(e) { return null; }
-}
-
-// ── Status ──
-function setS(msg, type) {
-  var el = document.getElementById('sb');
-  el.innerHTML = msg; el.className = 'sbar show ' + type;
+var STORE_KEY = 'koc_v2_lastmonth';
+function saveLastMonth(d){ try{localStorage.setItem(STORE_KEY, JSON.stringify(d));}catch(e){} }
+function loadLastMonth(){ try{var d=localStorage.getItem(STORE_KEY);return d?JSON.parse(d):null;}catch(e){return null;} }
+function setS(msg,type){var el=document.getElementById('sb');el.innerHTML=msg;el.className='sbar show '+type;}
+function updateCostTotal(){
+  var v=parseInt(document.getElementById('costVideo').value)||0;
+  var l=parseInt(document.getElementById('costLicense').value)||0;
+  var el=document.getElementById('costTotal');
+  el.textContent=(v||l)?'合計：¥'+(v+l).toLocaleString()+'（影片費 ¥'+v.toLocaleString()+' + 授權費 ¥'+l.toLocaleString()+'）':'';
 }
 
-// ── Cost total ──
-function updateCostTotal() {
-  var v = parseInt(document.getElementById('costVideo').value) || 0;
-  var l = parseInt(document.getElementById('costLicense').value) || 0;
-  var el = document.getElementById('costTotal');
-  if (v || l) el.textContent = '合計：¥' + (v + l).toLocaleString() + '（影片費 ¥' + v.toLocaleString() + ' + 授權費 ¥' + l.toLocaleString() + '）';
-  else el.textContent = '';
+// ── Content cards ──
+var contentCount=0;
+function addContent(type){
+  if(contentCount>=5){setS('最多 5 筆','err');return;}
+  contentCount++;
+  var n=contentCount;
+  var isLive=(type==='live');
+  var div=document.createElement('div');
+  div.className='content-card type-'+(isLive?'live':'video');
+  div.id='cc'+n;
+  var fields = isLive ? `
+    <div><label>直播標題</label><input type="text" id="ct${n}" placeholder="例：【鋼嵐】エヴァンゲリオンコラボイベント解説配信"></div>
+    <div style="margin-top:.7rem"><label>直播連結（選填）</label><input type="url" id="cu${n}" placeholder="https://www.youtube.com/watch?v=..."></div>
+    <div class="g4" style="margin-top:.7rem">
+      <div><label>最高同時在線</label><input type="number" id="cv${n}" placeholder="0"></div>
+      <div><label>總觀看次數</label><input type="number" id="cl${n}" placeholder="0"></div>
+      <div><label>聊天訊息數</label><input type="number" id="cch${n}" placeholder="0"></div>
+      <div><label>直播時長（分）</label><input type="number" id="cd${n}" placeholder="0"></div>
+    </div>
+    <div class="g2" style="margin-top:.7rem">
+      <div><label>按讚數（選填）</label><input type="number" id="ck${n}" placeholder="0"></div>
+      <div><label>SuperChat 金額 ¥（選填）</label><input type="number" id="csc${n}" placeholder="0"></div>
+    </div>` : `
+    <div><label>影片標題</label><input type="text" id="ct${n}" placeholder="例：【鋼嵐】新SSR英雄実装！ガチャ100連してみた"></div>
+    <div style="margin-top:.7rem"><label>影片連結（選填）</label><input type="url" id="cu${n}" placeholder="https://www.youtube.com/watch?v=..."></div>
+    <div class="g4" style="margin-top:.7rem">
+      <div><label>觀看數</label><input type="number" id="cv${n}" placeholder="0"></div>
+      <div><label>按讚數</label><input type="number" id="ck${n}" placeholder="0"></div>
+      <div><label>留言數</label><input type="number" id="cm${n}" placeholder="0"></div>
+      <div><label>觀看完成率 %（選填）</label><input type="number" id="cfr${n}" placeholder="例：42"></div>
+    </div>`;
+  div.innerHTML=`
+    <div class="card-header">
+      <span class="card-type-badge ${isLive?'badge-live':'badge-video'}">${isLive?'🔴 直播':'🎬 影片'} #${n}</span>
+      <button class="btn-del" onclick="removeContent(${n})">✕ 移除</button>
+    </div>${fields}`;
+  document.getElementById('contentList').appendChild(div);
 }
-document.getElementById('costVideo').addEventListener('input', updateCostTotal);
-document.getElementById('costLicense').addEventListener('input', updateCostTotal);
-
-// ── Video cards ──
-var videoCount = 0;
-
-function addVideo() {
-  if (videoCount >= 5) { setS('最多 5 支影片', 'err'); return; }
-  videoCount++;
-  var n = videoCount;
-  var div = document.createElement('div');
-  div.className = 'video-card';
-  div.id = 'vc' + n;
-  div.innerHTML =
-    '<div class="video-card-header"><span class="video-num">影片 ' + n + '</span><button class="btn-del-video" onclick="removeVideo(' + n + ')">✕ 移除</button></div>' +
-    '<div><label>影片標題</label><input type="text" id="vTitle' + n + '" placeholder="例：【ラングリッサー】新SSR英雄実装！ガチャ100連してみた"></div>' +
-    '<div style="margin-top:.7rem"><label>影片連結（選填）</label><input type="url" id="vUrl' + n + '" placeholder="https://www.youtube.com/watch?v=..."></div>' +
-    '<div class="g4" style="margin-top:.7rem">' +
-    '<div><label>觀看數</label><input type="number" id="vViews' + n + '" placeholder="0"></div>' +
-    '<div><label>按讚數</label><input type="number" id="vLikes' + n + '" placeholder="0"></div>' +
-    '<div><label>留言數</label><input type="number" id="vComments' + n + '" placeholder="0"></div>' +
-    '<div><label>分享數（選填）</label><input type="number" id="vShares' + n + '" placeholder="0"></div>' +
-    '</div>';
-  document.getElementById('videoList').appendChild(div);
-  if (videoCount >= 5) document.getElementById('addVideoBtn').style.display = 'none';
+function removeContent(n){
+  var el=document.getElementById('cc'+n);
+  if(el)el.remove();
+  contentCount--;
 }
 
-function removeVideo(n) {
-  var el = document.getElementById('vc' + n);
-  if (el) el.remove();
-  videoCount--;
-  document.getElementById('addVideoBtn').style.display = '';
+// ── Collect data ──
+function getVal(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function getNum(id){return parseInt(getVal(id))||0;}
+
+function collectContents(){
+  var videos=[], lives=[];
+  for(var i=1;i<=10;i++){
+    var card=document.getElementById('cc'+i);
+    if(!card)continue;
+    var isLive=card.className.includes('type-live');
+    var title=getVal('ct'+i)||( isLive?'直播 #'+i:'影片 #'+i);
+    if(isLive){
+      var peak=getNum('cv'+i), totalViews=getNum('cl'+i), chat=getNum('cch'+i);
+      var dur=getNum('cd'+i), likes=getNum('ck'+i), sc=getNum('csc'+i);
+      var chatRate=peak>0?Math.round(chat/peak*100)/100:0;
+      lives.push({title,peak,totalViews,chat,dur,likes,sc,chatRate,url:getVal('cu'+i)});
+    } else {
+      var views=getNum('cv'+i), likes=getNum('ck'+i), comments=getNum('cm'+i), fr=getNum('cfr'+i);
+      var eng=views>0?Math.round((likes+comments)/views*1000)/10:0;
+      videos.push({title,views,likes,comments,fr,eng,url:getVal('cu'+i)});
+    }
+  }
+  return{videos,lives};
 }
 
 // ── Load last month ──
-function loadLastMonthUI() {
-  var lm = loadLastMonth();
-  if (!lm) return;
-  document.getElementById('lastMonthLabel').textContent = (lm.month || '上月') + ' 數據';
-  document.getElementById('lastMonthBadge').textContent = '自動帶入';
-  document.getElementById('lmViews').textContent = (lm.totalViews || 0).toLocaleString();
-  document.getElementById('lmLikes').textContent = (lm.totalLikes || 0).toLocaleString();
-  document.getElementById('lmComments').textContent = (lm.totalComments || 0).toLocaleString();
-  document.getElementById('lmCPV').textContent = lm.cpv ? '¥' + lm.cpv : '—';
+function loadLMUI(){
+  var lm=loadLastMonth();
+  if(!lm)return;
+  document.getElementById('lmLabel').textContent=(lm.month||'上月')+' 數據';
+  document.getElementById('lmBadge').textContent='✓ 自動帶入';
+  document.getElementById('lmVideoViews').textContent=lm.videoViews?(lm.videoViews).toLocaleString():'—';
+  document.getElementById('lmVideoEng').textContent=lm.videoEng?lm.videoEng+'%':'—';
+  document.getElementById('lmLivePeak').textContent=lm.livePeak?(lm.livePeak).toLocaleString():'—';
+  document.getElementById('lmLiveViews').textContent=lm.liveViews?(lm.liveViews).toLocaleString():'—';
+  document.getElementById('lmCPV').textContent=lm.cpv?'¥'+lm.cpv:'—';
 }
-
-// ── Init ──
-addVideo();
-loadLastMonthUI();
-
-// ── Collect video data ──
-function getVideos() {
-  var videos = [];
-  for (var i = 1; i <= 5; i++) {
-    var el = document.getElementById('vc' + i);
-    if (!el) continue;
-    var title = document.getElementById('vTitle' + i) ? document.getElementById('vTitle' + i).value.trim() : '';
-    var views = parseInt(document.getElementById('vViews' + i) ? document.getElementById('vViews' + i).value : 0) || 0;
-    var likes = parseInt(document.getElementById('vLikes' + i) ? document.getElementById('vLikes' + i).value : 0) || 0;
-    var comments = parseInt(document.getElementById('vComments' + i) ? document.getElementById('vComments' + i).value : 0) || 0;
-    var shares = parseInt(document.getElementById('vShares' + i) ? document.getElementById('vShares' + i).value : 0) || 0;
-    var url = document.getElementById('vUrl' + i) ? document.getElementById('vUrl' + i).value.trim() : '';
-    if (!title && !views) continue;
-    var engRate = views > 0 ? Math.round((likes + comments) / views * 1000) / 10 : 0;
-    videos.push({ title: title || '影片 ' + i, views, likes, comments, shares, url, engRate });
-  }
-  return videos;
-}
+addContent('video');
+loadLMUI();
 
 // ── Generate ──
-function doGenerate() {
-  var kocName = document.getElementById('kocName').value.trim();
-  var month = document.getElementById('reportMonth').value.trim();
-  var channelUrl = document.getElementById('channelUrl').value.trim();
-  var subscribers = parseInt(document.getElementById('subscribers').value) || 0;
-  var costVideo = parseInt(document.getElementById('costVideo').value) || 0;
-  var costLicense = parseInt(document.getElementById('costLicense').value) || 0;
-  var costTotal = costVideo + costLicense;
-  var comments = document.getElementById('comments').value.trim();
-  var gameComments = parseInt(document.getElementById('gameComments').value) || 0;
-  var videos = getVideos();
+function doGenerate(){
+  var kocName=getVal('kocName'), month=getVal('reportMonth');
+  if(!kocName){setS('請填入 KOC 名稱','err');return;}
+  var {videos,lives}=collectContents();
+  if(!videos.length&&!lives.length){setS('請至少填入一筆影片或直播數據','err');return;}
 
-  if (!kocName) { setS('請填入 KOC 名稱', 'err'); return; }
-  if (!videos.length) { setS('請至少填入一支影片的數據', 'err'); return; }
+  var costVideo=getNum('costVideo'), costLicense=getNum('costLicense');
+  var costTotal=costVideo+costLicense;
+  var subscribers=getNum('subscribers');
+  var comments=getVal('comments'), gameComments=getNum('gameComments');
 
-  var totalViews = videos.reduce(function(s, v) { return s + v.views; }, 0);
-  var totalLikes = videos.reduce(function(s, v) { return s + v.likes; }, 0);
-  var totalComments = videos.reduce(function(s, v) { return s + v.comments; }, 0);
-  var totalEng = totalViews > 0 ? Math.round((totalLikes + totalComments) / totalViews * 1000) / 10 : 0;
-  var cpv = totalViews > 0 && costTotal > 0 ? Math.round(costTotal / totalViews * 10) / 10 : 0;
-  // Japan mobile game YouTube CPV benchmark ≈ ¥10-12, use ¥10
-  var ytCPV = 10;
-  var ytEquiv = Math.round(totalViews * ytCPV / 10000 * 10) / 10;
-  var roiVsYT = cpv > 0 ? Math.round(ytCPV / cpv * 10) / 10 : 0;
+  // Video aggregates
+  var totalVideoViews=videos.reduce(function(s,v){return s+v.views;},0);
+  var totalLikes=videos.reduce(function(s,v){return s+v.likes;},0);
+  var totalComments2=videos.reduce(function(s,v){return s+v.comments;},0);
+  var avgVideoEng=totalVideoViews>0?Math.round((totalLikes+totalComments2)/totalVideoViews*1000)/10:0;
+  var cpv=totalVideoViews>0&&costTotal>0?Math.round(costTotal/totalVideoViews*10)/10:0;
+  var ytCPV=10;
+  var ytEquiv=Math.round(totalVideoViews*ytCPV/10000*10)/10;
+  var roiVsYT=cpv>0?Math.round(ytCPV/cpv*10)/10:0;
 
-  // Last month
-  var lm = loadLastMonth();
+  // Live aggregates
+  var totalLivePeak=lives.reduce(function(s,l){return s+l.peak;},0);
+  var totalLiveViews=lives.reduce(function(s,l){return s+l.totalViews;},0);
+  var totalChat=lives.reduce(function(s,l){return s+l.chat;},0);
+  var totalSC=lives.reduce(function(s,l){return s+l.sc;},0);
+  var avgChatRate=totalLivePeak>0?Math.round(totalChat/totalLivePeak*100)/100:0;
 
-  // Quote parsing
-  var quotes = [];
-  if (comments) {
-    comments.split('\n').forEach(function(cl) {
-      cl = cl.trim(); if (!cl || quotes.length >= 3) return;
-      var di = cl.lastIndexOf('—');
-      quotes.push(di > 0
-        ? { quote: cl.slice(0, di).trim().replace(/^[「『"']|[」』"']$/g, ''), source: cl.slice(di + 1).trim() }
-        : { quote: cl.replace(/^[「『"']|[」』"']$/g, ''), source: '' });
+  var lm=loadLastMonth();
+
+  // Parse quotes
+  var quotes=[];
+  if(comments){
+    comments.split('\n').forEach(function(cl){
+      cl=cl.trim();if(!cl||quotes.length>=3)return;
+      var di=cl.lastIndexOf('—');
+      quotes.push(di>0?{quote:cl.slice(0,di).trim().replace(/^[「『"']|[」』"']$/g,''),source:cl.slice(di+1).trim()}:{quote:cl.replace(/^[「『"']|[」』"']$/g,''),source:''});
     });
   }
 
-  var data = {
-    kocName, month, channelUrl, subscribers, costVideo, costLicense, costTotal,
-    videos, totalViews, totalLikes, totalComments, totalEng, cpv, ytEquiv, roiVsYT,
-    quotes, lm, gameComments
-  };
+  var data={kocName,month,subscribers,costVideo,costLicense,costTotal,
+    videos,lives,totalVideoViews,avgVideoEng,cpv,ytEquiv,roiVsYT,
+    totalLivePeak,totalLiveViews,totalChat,totalSC,avgChatRate,
+    gameComments,totalComments:totalComments2,quotes,lm};
 
-  var btn = document.getElementById('genBtn');
-  btn.disabled = true; btn.textContent = '產生中...';
-  setS('<span class="spin"></span>產生 PPT 中，請稍候...', 'info');
+  var btn=document.getElementById('genBtn');
+  btn.disabled=true;btn.textContent='產生中...';
+  setS('<span class="spin"></span>產生 PPT 中，請稍候...','info');
 
-  setTimeout(function() {
-    try {
-      buildPPT(data).then(function() {
-        // Save this month as last month
-        saveLastMonth({ month: month, totalViews, totalLikes, totalComments, cpv, costTotal, videos: videos.length });
-        setS('✅ 完成！已下載 ' + kocName + '_月報_' + month + '.pptx　（本月數據已存為下月對比）', 'ok');
-        btn.disabled = false; btn.textContent = '⬇ 產生並下載月報 PPT';
-        loadLastMonthUI();
-      }).catch(function(e) {
-        setS('❌ PPT 產生失敗：' + e.message, 'err');
-        console.error(e);
-        btn.disabled = false; btn.textContent = '⬇ 產生並下載月報 PPT';
-      });
-    } catch(e) {
-      setS('❌ 錯誤：' + e.message, 'err');
+  setTimeout(function(){
+    buildPPT(data).then(function(){
+      saveLastMonth({month,videoViews:totalVideoViews,videoEng:avgVideoEng,
+        livePeak:totalLivePeak,liveViews:totalLiveViews,cpv,costTotal,
+        videoCount:videos.length,liveCount:lives.length});
+      setS('✅ 完成！已下載 '+kocName+'_月報_'+month+'.pptx　（本月數據已存為下月對比）','ok');
+      loadLMUI();
+      btn.disabled=false;btn.textContent='⬇ 產生並下載月報 PPT';
+    }).catch(function(e){
+      setS('❌ PPT 產生失敗：'+e.message,'err');
       console.error(e);
-      btn.disabled = false; btn.textContent = '⬇ 產生並下載月報 PPT';
-    }
-  }, 100);
+      btn.disabled=false;btn.textContent='⬇ 產生並下載月報 PPT';
+    });
+  },100);
 }
 
 // ══════════════════════════════════
@@ -291,302 +307,303 @@ function doGenerate() {
 async function buildPPT(d) {
   const pres = new PptxGenJS();
   pres.layout = 'LAYOUT_WIDE';
-  const W = 13.33, H = 7.5;
+  const W=13.33, H=7.5;
 
-  // Colors - light theme
-  const BG='F8FAFC', CARD='FFFFFF', SURF='EFF6FF';
-  const TEAL='0284C7', GOLD='D97706', GRN='059669', PURPLE='7C3AED', RED='DC2626';
-  const WHITE='1E293B', BRIGHT='334155', MED='64748B';
+  // Light theme colors
+  const BG='F8FAFC', CARD='FFFFFF', SURF='EFF6FF', SURF2='F0F4FF';
+  const TEAL='0284C7', GOLD='D97706', GRN='059669', PURPLE='7C3AED', RED='DC2626', LIVE='6D28D9';
+  const INK='1E293B', BODY='334155', MED='64748B', PALE='CBD5E1';
 
-  function bg(s, c) { s.background = { color: c || BG }; }
-  function box(s, x, y, w, h, fill, border, bw) {
-    s.addShape('rect', { x, y, w, h, fill: { color: fill }, line: { color: border || fill, width: bw || 1.5 } });
+  function bg(s,c){s.background={color:c||BG};}
+  function box(s,x,y,w,h,fill,border,bw){s.addShape('rect',{x,y,w,h,fill:{color:fill},line:{color:border||fill,width:bw||1.5}});}
+  function txt(s,str,x,y,w,h,size,color,opts={}){if(!str&&str!==0)return;s.addText(String(str),{x,y,w,h,fontSize:size,color,margin:0,...opts});}
+  function hdr(s,title,sub,accentCol){
+    box(s,0,0,W,.85,SURF); box(s,0,0,.2,.85,accentCol||PURPLE);
+    txt(s,title,.38,.15,10,.52,21,INK,{bold:true});
+    if(sub)txt(s,sub,.38,.62,12,.26,13,MED);
   }
-  function txt(s, str, x, y, w, h, size, color, opts = {}) {
-    if (!str && str !== 0) return;
-    s.addText(String(str), { x, y, w, h, fontSize: size, color, margin: 0, ...opts });
+  function kbox(s,x,y,w,h,val,lbl,col,sub){
+    box(s,x,y,w,h,CARD,col,2);
+    txt(s,val,x+.1,y+.15,w-.2,h*.5,28,col,{bold:true,align:'center'});
+    txt(s,lbl,x+.1,y+h-.5,w-.2,.3,12,BODY,{bold:true,align:'center'});
+    if(sub)txt(s,sub,x+.1,y+h-.25,w-.2,.22,11,MED,{align:'center'});
   }
-  function hdr(s, title, sub) {
-    box(s, 0, 0, W, .9, SURF); box(s, 0, 0, .2, .9, PURPLE);
-    txt(s, title, .38, .16, 10, .56, 22, '1E293B', { bold: true });
-    if (sub) txt(s, sub, .38, .62, 10, .25, 13, MED);
-  }
-  function kpiBox(s, x, y, w, h, val, lbl, col, sub) {
-    box(s, x, y, w, h, CARD, col, 2);
-    txt(s, val, x + .1, y + .15, w - .2, h * .5, 30, col, { bold: true, align: 'center' });
-    txt(s, lbl, x + .1, y + h - .52, w - .2, .35, 13, BRIGHT, { bold: true, align: 'center' });
-    if (sub) txt(s, sub, x + .1, y + h - .28, w - .2, .25, 13, MED, { align: 'center' });
-  }
-  function arrow(s, x, y, val, col) {
-    const up = val >= 0;
-    box(s, x, y, 1.8, .48, up ? '052e16' : '2a0a0a', up ? GRN : RED, 1);
-    txt(s, (up ? '▲ +' : '▼ ') + Math.abs(val) + '%', x + .1, y + .06, 1.6, .35, 14, up ? GRN : RED, { bold: true, align: 'center' });
+  function diffBadge(s,x,y,cur,prev,invert){
+    if(!prev||prev===0)return;
+    var pct=Math.round((cur-prev)/prev*100);
+    var good=invert?pct<=0:pct>=0;
+    box(s,x,y,1.9,.48,good?'ECFDF5':'FEF2F2',good?GRN:RED,1);
+    txt(s,(pct>=0?'▲ +':'▼ ')+Math.abs(pct)+'%',x+.05,y+.06,1.8,.35,14,good?GRN:RED,{bold:true,align:'center'});
   }
 
   // ── S1 封面 ──
   {
-    const s = pres.addSlide(); bg(s, 'F0F4FF');
-    box(s, 0, 0, W, .15, PURPLE);
-    txt(s, d.kocName, .5, .38, 12, .85, 48, WHITE, { bold: true });
-    txt(s, 'KOC 固定合作　月報', .5, 1.32, 12, .6, 26, '#A5B4FC', { bold: true });
-    txt(s, d.month, .5, 2.0, 12, .42, 16, BRIGHT);
-    if (d.subscribers) txt(s, '📺  チャンネル登録者数　' + d.subscribers.toLocaleString() + ' 人', .5, 2.5, 12, .4, 15, MED);
+    const s=pres.addSlide(); bg(s,'F0F4FF');
+    box(s,0,0,W,.15,PURPLE);
+    txt(s,d.kocName,.5,.38,12,.82,46,INK,{bold:true});
+    txt(s,'KOC 固定合作　月報',.5,1.28,12,.58,24,PURPLE,{bold:true});
+    txt(s,d.month,.5,1.98,12,.42,15,MED);
+    if(d.subscribers)txt(s,'📺  登録者数 '+d.subscribers.toLocaleString()+' 人',.5,2.48,12,.38,14,MED);
 
-    const kpiY = 3.1;
-    kpiBox(s, .5, kpiY, 2.9, 2.6, d.totalViews.toLocaleString(), '本月總觀看數', TEAL);
-    kpiBox(s, 3.6, kpiY, 2.9, 2.6, d.totalEng + '%', '互動率', GRN, '(按讚+留言)÷觀看');
-    kpiBox(s, 6.7, kpiY, 2.9, 2.6, d.cpv ? '¥' + d.cpv : '—', 'CPV 每次觀看成本', GOLD, '均價 ¥10（日本手遊）');
-    kpiBox(s, 9.8, kpiY, 2.9, 2.6, d.videos.length + '支', '本月影片數', PURPLE);
+    const kpiY=d.subscribers?3.05:2.75;
+    const hasLive=d.lives.length>0, hasVideo=d.videos.length>0;
+    const kpis=[];
+    if(hasVideo)kpis.push({val:d.totalVideoViews.toLocaleString(),lbl:'影片總觀看數',col:TEAL});
+    if(hasVideo)kpis.push({val:d.avgVideoEng+'%',lbl:'影片互動率',col:GRN,sub:'(按讚+留言)÷觀看'});
+    if(hasLive)kpis.push({val:d.totalLivePeak.toLocaleString(),lbl:'直播最高同時在線',col:LIVE});
+    if(hasLive)kpis.push({val:d.totalLiveViews.toLocaleString(),lbl:'直播總觀看次數',col:'0891B2'});
+    if(d.cpv)kpis.push({val:'¥'+d.cpv,lbl:'CPV / 每次觀看',col:GOLD,sub:'市場均價 ¥10'});
 
-    box(s, .4, 5.9, 12.5, .82, 'EFF6FF', PURPLE, 1);
-    txt(s, '📌  合計費用 ¥' + d.costTotal.toLocaleString() + '　影片費 ¥' + d.costVideo.toLocaleString() + '　授權費 ¥' + d.costLicense.toLocaleString(), .7, 5.98, 12, .62, 14, PURPLE, { bold: true });
+    const kw=(W-1.0)/kpis.length-.15;
+    kpis.forEach((k,i)=>kbox(s,.5+i*(kw+.15),kpiY,kw,2.4,k.val,k.lbl,k.col,k.sub||''));
+
+    box(s,.4,5.62,12.5,.82,'EEF2FF',PURPLE,1);
+    txt(s,'📌  本月費用　影片製作費 ¥'+d.costVideo.toLocaleString()+'　廣告授權費 ¥'+d.costLicense.toLocaleString()+'　合計 ¥'+d.costTotal.toLocaleString(),.65,5.72,12,.58,14,PURPLE,{bold:true});
+    txt(s,d.videos.length+'支影片　'+d.lives.length+'場直播',.5,6.6,12,.35,13,MED);
   }
 
-  // ── S2 本月表現總覽 ──
-  {
-    const s = pres.addSlide(); bg(s); hdr(s, '本月表現總覽', d.month + '　' + d.kocName);
-    const lm = d.lm;
+  // ── S2 影片成效（有影片才顯示）──
+  if(d.videos.length>0){
+    const s=pres.addSlide(); bg(s); hdr(s,'影片成效','一般影片數據總覽',TEAL);
 
-    // Big stats with MoM comparison
-    const stats = [
-      { val: d.totalViews.toLocaleString(), lbl: '總觀看數', col: TEAL, lmVal: lm ? lm.totalViews : null, unit: '' },
-      { val: d.totalLikes.toLocaleString(), lbl: '總按讚數', col: GRN, lmVal: null, unit: '' },
-      { val: d.totalComments.toLocaleString(), lbl: '總留言數', col: GOLD, lmVal: lm ? lm.totalComments : null, unit: '' },
-      { val: d.totalEng + '%', lbl: '互動率', col: PURPLE, lmVal: null, unit: '' },
+    // Stats row
+    const vStats=[
+      {val:d.totalVideoViews.toLocaleString(),lbl:'總觀看數',col:TEAL},
+      {val:d.avgVideoEng+'%',lbl:'平均互動率',col:GRN,sub:'(按讚+留言)÷觀看'},
+      {val:d.cpv?'¥'+d.cpv:'—',lbl:'CPV',col:GOLD,sub:'市場均價 ¥10'},
+      {val:d.roiVsYT>0?'×'+d.roiVsYT:'—',lbl:'vs YouTube廣告',col:PURPLE},
     ];
-
-    stats.forEach((st, i) => {
-      const x = .4 + i * 3.15;
-      box(s, x, 1.05, 2.95, 3.5, CARD, st.col, 2);
-      txt(s, st.val, x + .1, 1.28, 2.75, 1.5, 30, st.col, { bold: true, align: 'center' });
-      txt(s, st.lbl, x + .1, 2.72, 2.75, .38, 14, BRIGHT, { bold: true, align: 'center' });
-      // MoM arrow
-      if (lm && st.lmVal !== null && st.lmVal > 0) {
-        const rawVal = i === 0 ? d.totalViews : d.totalComments;
-        const pct = Math.round((rawVal - st.lmVal) / st.lmVal * 100);
-        arrow(s, x + .58, 3.22, pct, pct >= 0 ? GRN : RED);
-        txt(s, '上月 ' + st.lmVal.toLocaleString(), x + .1, 3.75, 2.75, .32, 13, MED, { align: 'center' });
-      } else if (lm && st.lmVal === null) {
-        txt(s, '上月無對應數據', x + .1, 3.22, 2.75, .32, 13, MED, { align: 'center' });
-      } else {
-        txt(s, '首次記錄', x + .1, 3.22, 2.75, .32, 13, MED, { align: 'center' });
+    const sw=2.95;
+    vStats.forEach((st,i)=>{
+      const x=.4+i*(sw+.12);
+      kbox(s,x,1.0,sw,1.9,st.val,st.lbl,st.col,st.sub||'');
+      if(d.lm){
+        if(i===0)diffBadge(s,x+.55,2.98,d.totalVideoViews,d.lm.videoViews);
+        if(i===1)diffBadge(s,x+.55,2.98,d.avgVideoEng,d.lm.videoEng);
+        if(i===2&&d.cpv&&d.lm.cpv)diffBadge(s,x+.55,2.98,d.cpv,d.lm.cpv,true);
       }
     });
 
-    // CPV comparison
-    box(s, .4, 4.75, 12.5, 2.4, CARD, SURF, 1);
-    txt(s, '費用效益', .6, 4.9, 12, .38, 15, BRIGHT, { bold: true });
-    [
-      { lbl: '影片製作費', val: '¥' + d.costVideo.toLocaleString(), col: MED },
-      { lbl: '廣告授權費', val: '¥' + d.costLicense.toLocaleString(), col: MED },
-      { lbl: '合計費用', val: '¥' + d.costTotal.toLocaleString(), col: WHITE },
-      { lbl: 'CPV（每次觀看成本）', val: d.cpv ? '¥' + d.cpv : '—', col: GOLD },
-      { lbl: '同等觀看投 YouTube 廣告約需', val: '¥' + d.ytEquiv + '萬', col: TEAL },
-      { lbl: '費效倍率（vs YouTube 廣告）', val: d.roiVsYT > 0 ? '×' + d.roiVsYT : '—', col: GRN },
-    ].forEach((it, i) => {
-      const x = .6 + (i % 3) * 4.15;
-      const y = 5.38 + Math.floor(i / 3) * .6;
-      txt(s, it.lbl, x, y, 2.5, .42, 13, MED);
-      txt(s, it.val, x + 2.55, y, 1.5, .42, 15, it.col, { bold: true });
+    // Video list
+    const maxV=Math.max(...d.videos.map(v=>v.views))||1;
+    const maxE=Math.max(...d.videos.map(v=>v.likes+v.comments))||1;
+    const rowH=Math.min(1.1,(H-3.6)/d.videos.length);
+
+    box(s,.4,3.55,12.5,.4,SURF);
+    ['影片標題','觀看數','按讚','留言','互動率','完成率'].forEach((h2,i)=>{
+      const xs=[.55,6.55,8.2,9.55,10.85,12.1];
+      txt(s,h2,xs[i],3.6,i===0?5.8:1.2,.3,12,TEAL,{bold:true});
     });
-  }
 
-  // ── S3 影片明細 ──
-  {
-    const s = pres.addSlide(); bg(s); hdr(s, '影片明細', '各支影片成效數據');
-    const cols = [4.8, 1.5, 1.3, 1.3, 1.2, 1.4, 1.3];
-    const headers = ['影片標題', '觀看數', '按讚數', '留言數', '互動率', '分享數', ''];
-    const colX = [.35];
-    cols.forEach((w, i) => { if (i < cols.length - 1) colX.push(colX[i] + w + .05); });
-
-    box(s, .35, 1.0, 12.65, .45, 'EFF6FF');
-    headers.forEach((h2, i) => txt(s, h2, colX[i] + .1, 1.06, cols[i], .32, 12, TEAL, { bold: true }));
-
-    d.videos.forEach((v, i) => {
-      const y = 1.55 + i * 1.62;
-      const bg2 = i % 2 === 0 ? 'F8FAFC' : 'EFF6FF';
-
-      // Title row
-      box(s, .35, y, 12.65, .45, bg2);
-      txt(s, v.title, colX[0] + .1, y + .07, cols[0] - .15, .32, 12, WHITE, { bold: true });
-      [[v.views.toLocaleString(), TEAL], [v.likes.toLocaleString(), GRN], [v.comments.toLocaleString(), GOLD], [v.engRate + '%', PURPLE], [v.shares > 0 ? v.shares.toLocaleString() : '—', MED]].forEach(([val, col], ci) => {
-        txt(s, val, colX[ci + 1] + .1, y + .07, cols[ci + 1] - .1, .32, 13, col, { bold: true, valign: 'middle' });
+    d.videos.forEach((v,i)=>{
+      const y=4.0+i*rowH;
+      box(s,.4,y,12.5,rowH-.05,i%2===0?BG:SURF);
+      txt(s,v.title,.55,y+.06,5.8,rowH-.15,12,INK,{valign:'middle'});
+      [[v.views.toLocaleString(),TEAL],[v.likes.toLocaleString(),GRN],[v.comments.toLocaleString(),'0891B2'],[v.eng+'%',PURPLE],[v.fr?v.fr+'%':'—',GOLD]].forEach(([val,col],ci)=>{
+        const xs=[6.55,8.2,9.55,10.85,12.1];
+        txt(s,val,xs[ci],y+.06,1.2,rowH-.15,13,col,{bold:true,valign:'middle'});
       });
-
-      // Bar chart row
-      box(s, .35, y + .45, 12.65, 1.12, i % 2 === 0 ? 'F1F5F9' : 'E8F0FE');
-      const maxViews = Math.max(...d.videos.map(vv => vv.views)) || 1;
-      const barW = 11.5 * v.views / maxViews;
-      box(s, .55, y + .65, 11.5, .22, 'E2E8F0');
-      if (barW > 0) box(s, .55, y + .65, barW, .22, TEAL);
-      txt(s, '觀看', .35, y + .62, .95, .28, 13, MED, { align: 'right' });
-
-      const maxEng = Math.max(...d.videos.map(vv => vv.likes + vv.comments)) || 1;
-      const engW = 11.5 * (v.likes + v.comments) / maxEng;
-      box(s, .55, y + .98, 11.5, .22, 'E2E8F0');
-      if (engW > 0) box(s, .55, y + .98, engW, .22, GRN);
-      txt(s, '互動', .35, y + .95, .95, .28, 13, MED, { align: 'right' });
+      // mini bar
+      if(rowH>0.7){
+        box(s,.55,y+rowH-.3,5.8,.12,PALE);
+        box(s,.55,y+rowH-.3,5.8*v.views/maxV,.12,TEAL);
+      }
     });
   }
 
-  // ── S4 與上月對比 ──
-  if (d.lm) {
-    const s = pres.addSlide(); bg(s); hdr(s, '與上月對比', d.lm.month + ' → ' + d.month);
-    const lm = d.lm;
+  // ── S3 直播成效（有直播才顯示）──
+  if(d.lives.length>0){
+    const s=pres.addSlide(); bg(s); hdr(s,'直播成效','直播場次數據總覽',LIVE);
 
-    const metrics = [
-      { lbl: '總觀看數', cur: d.totalViews, prev: lm.totalViews, col: TEAL, fmt: v => v.toLocaleString() },
-      { lbl: '總留言數', cur: d.totalComments, prev: lm.totalComments, col: GOLD, fmt: v => v.toLocaleString() },
-      { lbl: 'CPV', cur: d.cpv, prev: lm.cpv, col: PURPLE, fmt: v => v ? '¥' + v : '—', invert: true },
-      { lbl: '影片數', cur: d.videos.length, prev: lm.videos, col: GRN, fmt: v => v + '支' },
+    const lStats=[
+      {val:d.totalLivePeak.toLocaleString(),lbl:'最高同時在線合計',col:LIVE,sub:'各場峰值加總'},
+      {val:d.totalLiveViews.toLocaleString(),lbl:'直播總觀看次數',col:'0891B2',sub:'含直播後重播'},
+      {val:d.totalChat.toLocaleString(),lbl:'聊天訊息總數',col:PURPLE,sub:'直播互動指標'},
+      {val:d.totalSC>0?'¥'+d.totalSC.toLocaleString():'—',lbl:'SuperChat 合計',col:GOLD,sub:''},
     ];
+    const sw=3.0;
+    lStats.forEach((st,i)=>kbox(s,.4+i*(sw+.12),1.0,sw,1.9,st.val,st.lbl,st.col,st.sub));
 
-    metrics.forEach((m, i) => {
-      const x = .4 + i * 3.15;
-      box(s, x, 1.05, 2.95, 5.7, CARD, m.col, 1.5);
-      txt(s, m.lbl, x + .1, 1.2, 2.75, .38, 14, m.col, { bold: true, align: 'center' });
+    // Live explanation box
+    box(s,.4,3.08,12.5,.75,'FEFCE8',GOLD,1);
+    txt(s,'💡  直播指標說明：「同時在線」反映實況互動熱度；「總觀看次數」含直播後重播累積；「聊天訊息數」是直播專屬互動指標，與一般影片留言不同，不混合計算 CPV',.6,3.18,12.1,.55,13,INK);
 
-      // Previous
-      txt(s, '上月', x + .15, 1.72, 2.65, .3, 12, MED, { align: 'center' });
-      txt(s, m.fmt(m.prev || 0), x + .1, 2.0, 2.75, .65, 22, MED, { align: 'center' });
-      txt(s, '↓', x + .1, 2.65, 2.75, .45, 24, '1E3A5F', { align: 'center', bold: true });
+    // Live detail table
+    box(s,.4,3.95,12.5,.42,SURF);
+    ['直播標題','同時在線','總觀看','聊天數','時長','SuperChat'].forEach((h2,i)=>{
+      const xs=[.55,5.7,7.25,8.8,10.25,11.5];
+      txt(s,h2,xs[i],4.0,i===0?4.9:1.3,.32,12,LIVE,{bold:true});
+    });
+    const lrH=Math.min(1.0,(H-4.52)/d.lives.length);
+    d.lives.forEach((l,i)=>{
+      const y=4.42+i*lrH;
+      box(s,.4,y,12.5,lrH-.04,i%2===0?BG:SURF);
+      txt(s,l.title,.55,y+.06,4.95,lrH-.14,12,INK,{valign:'middle'});
+      [[l.peak.toLocaleString(),LIVE],[l.totalViews.toLocaleString(),'0891B2'],[l.chat.toLocaleString(),PURPLE],[l.dur?l.dur+'分':'—',MED],[l.sc>0?'¥'+l.sc.toLocaleString():'—',GOLD]].forEach(([val,col],ci)=>{
+        const xs=[5.7,7.25,8.8,10.25,11.5];
+        txt(s,val,xs[ci],y+.06,1.25,lrH-.14,13,col,{bold:true,valign:'middle'});
+      });
+    });
+  }
 
-      // Current
-      txt(s, '本月', x + .15, 3.08, 2.65, .3, 12, BRIGHT, { align: 'center' });
-      txt(s, m.fmt(m.cur || 0), x + .1, 3.35, 2.75, .75, 28, m.col, { bold: true, align: 'center' });
+  // ── S4 月對比（有上月數據才顯示）──
+  if(d.lm){
+    const s=pres.addSlide(); bg(s); hdr(s,'與上月對比',d.lm.month+' → '+d.month,GRN);
+    const metrics=[];
+    if(d.lm.videoViews)metrics.push({lbl:'影片觀看數',cur:d.totalVideoViews,prev:d.lm.videoViews,col:TEAL,fmt:v=>v.toLocaleString()});
+    if(d.lm.videoEng)metrics.push({lbl:'影片互動率',cur:d.avgVideoEng,prev:d.lm.videoEng,col:GRN,fmt:v=>v+'%'});
+    if(d.lm.livePeak)metrics.push({lbl:'直播同時在線',cur:d.totalLivePeak,prev:d.lm.livePeak,col:LIVE,fmt:v=>v.toLocaleString()});
+    if(d.lm.cpv&&d.cpv)metrics.push({lbl:'CPV',cur:d.cpv,prev:d.lm.cpv,col:GOLD,fmt:v=>v?'¥'+v:'—',invert:true});
 
-      // % change
-      if (m.prev && m.prev > 0) {
-        const pct = Math.round((m.cur - m.prev) / m.prev * 100);
-        const good = m.invert ? pct <= 0 : pct >= 0;
-        box(s, x + .48, 4.3, 2.0, .55, good ? '052e16' : '2a0a0a', good ? GRN : RED, 1.5);
-        txt(s, (pct >= 0 ? '▲ +' : '▼ ') + Math.abs(pct) + '%', x + .48, 4.34, 2.0, .45, 16, good ? GRN : RED, { bold: true, align: 'center' });
+    const mw=(W-1.0)/Math.max(metrics.length,1)-.15;
+    metrics.forEach((m,i)=>{
+      const x=.5+i*(mw+.15);
+      box(s,x,1.0,mw,5.7,CARD,m.col,2);
+      txt(s,m.lbl,x+.1,1.15,mw-.2,.42,14,m.col,{bold:true,align:'center'});
+      txt(s,'上月',x+.1,1.7,mw-.2,.3,12,MED,{align:'center'});
+      txt(s,m.fmt(m.prev||0),x+.1,2.0,mw-.2,.7,24,MED,{align:'center'});
+      txt(s,'↓',x+.1,2.72,mw-.2,.45,22,PALE,{align:'center',bold:true});
+      txt(s,'本月',x+.1,3.18,mw-.2,.3,12,BODY,{align:'center'});
+      txt(s,m.fmt(m.cur||0),x+.1,3.48,mw-.2,.8,28,m.col,{bold:true,align:'center'});
+      if(m.prev>0){
+        const pct=Math.round((m.cur-m.prev)/m.prev*100);
+        const good=m.invert?pct<=0:pct>=0;
+        box(s,x+(mw-.2)/2-.8,4.48,1.6,.52,good?'ECFDF5':'FEF2F2',good?GRN:RED,1.5);
+        txt(s,(pct>=0?'▲ +':'▼ ')+Math.abs(pct)+'%',x+(mw-.2)/2-.8,4.52,1.6,.4,16,good?GRN:RED,{bold:true,align:'center'});
       }
-      txt(s, m.invert ? '（低更好）' : '（高更好）', x + .1, 5.05, 2.75, .3, 13, MED, { align: 'center' });
+      txt(s,m.invert?'↓ 低更好':'↑ 高更好',x+.1,5.2,mw-.2,.32,12,MED,{align:'center'});
     });
 
-    // Summary note
-    const viewPct = lm.totalViews > 0 ? Math.round((d.totalViews - lm.totalViews) / lm.totalViews * 100) : 0;
-    const summary = viewPct >= 10 ? '本月觀看數較上月成長 ' + viewPct + '%，表現優異，建議繼續合作並考慮加碼授權費用。'
-      : viewPct >= 0 ? '本月觀看數較上月持平（+' + viewPct + '%），維持穩定水準，建議持續合作。'
-      : '本月觀看數較上月下滑 ' + Math.abs(viewPct) + '%，建議與 KOC 討論內容優化方向。';
-    box(s, .4, 6.35, 12.5, .78, 'EFF6FF', PURPLE, 1);
-    txt(s, '📊  ' + summary, .65, 6.45, 12, .58, 13, PURPLE, { bold: true });
+    // Auto summary
+    const viewPct=d.lm.videoViews>0?Math.round((d.totalVideoViews-d.lm.videoViews)/d.lm.videoViews*100):null;
+    const summary=viewPct===null?'本月首次設立基準，將作為後續月份對比依據。':
+      viewPct>=10?'影片觀看數月增 +'+viewPct+'%，表現優異，建議維持或擴大合作規模。':
+      viewPct>=0?'影片觀看持平（+'+viewPct+'%），整體穩定，建議持續合作並嘗試新的內容切角。':
+      '影片觀看數下滑 '+Math.abs(viewPct)+'%，建議與 KOC 討論標題、縮圖或內容方向的優化。';
+    box(s,.4,6.38,12.5,.76,'EEF2FF',PURPLE,1);
+    txt(s,'📊  '+summary,.65,6.48,12,.56,13,PURPLE,{bold:true});
   }
 
   // ── S5 KOC 價值定位 ──
   {
-    const s = pres.addSlide(); bg(s); hdr(s, 'KOC 合作價值', 'Why KOC？不只是數字，是精準觸及');
-
-    // Left: 3 value pillars
-    txt(s, 'KOC 合作三大優勢', .4, 1.05, 6.2, .42, 16, BRIGHT, { bold: true });
-    const pillars = [
-      { icon: '🎯', title: '精準受眾', body: '頻道訂閱者為主動選擇追蹤的手遊玩家，非被動受廣告曝光的一般用戶，觀看意圖與購買意願明顯更高。', col: TEAL },
-      { icon: '💬', title: '真實信任', body: 'KOC 是「玩家朋友的推薦」而非品牌廣告，觀眾對內容的信任度與轉換意圖遠高於付費廣告。', col: PURPLE },
-      { icon: '📈', title: '長尾累積', body: '影片上傳後持續累積觀看，不像廣告停投即消失。本月觀看數只是起點，未來數月仍會持續增加。', col: GRN },
+    const s=pres.addSlide(); bg(s); hdr(s,'KOC 合作價值','Why KOC？精準觸及 × 真實互動',PURPLE);
+    const pillars=[
+      {icon:'🎯',title:'精準受眾',body:'頻道訂閱者為主動選擇追蹤的手遊玩家，而非被動受廣告曝光的一般用戶，觀看意圖與購買意願明顯更高。',col:TEAL},
+      {icon:'💬',title:'真實信任',body:'KOC 是「玩家朋友的推薦」而非品牌廣告，觀眾對內容的信任度與轉換意圖遠高於付費廣告，互動率通常達 2–8%。',col:PURPLE},
+      {icon:'📈',title:'長尾累積',body:'影片上傳後持續累積觀看；直播錄影也會持續被搜尋到，不像廣告停投即消失，長期 SEO 效益不計入換算。',col:GRN},
     ];
-    pillars.forEach((p, i) => {
-      const y = 1.6 + i * 1.65;
-      box(s, .4, y, 6.2, 1.48, CARD, p.col, 1.5);
-      txt(s, p.icon + '  ' + p.title, .6, y + .12, 5.8, .42, 15, p.col, { bold: true });
-      txt(s, p.body, .6, y + .6, 5.8, .75, 13, BRIGHT, { lineSpacingMultiple: 1.4 });
+    pillars.forEach((p,i)=>{
+      const x=.4+i*4.28;
+      box(s,x,1.0,4.1,3.8,CARD,p.col,2);
+      txt(s,p.icon+'  '+p.title,x+.2,1.15,3.7,.45,16,p.col,{bold:true});
+      txt(s,p.body,x+.2,1.72,3.7,2.8,13,BODY,{lineSpacingMultiple:1.5});
     });
 
-    // Right: engagement comparison
-    txt(s, '互動率對比', 6.9, 1.05, 6.0, .42, 16, BRIGHT, { bold: true });
-
-    // KOC bar
-    const engColor = d.totalEng >= 3 ? GRN : d.totalEng >= 1 ? GOLD : RED;
-    box(s, 6.9, 1.6, 6.0, 1.5, CARD, engColor, 2);
-    txt(s, 'KOC 本月互動率', 7.1, 1.75, 5.6, .38, 14, engColor, { bold: true });
-    txt(s, d.totalEng + '%', 7.1, 2.1, 5.6, .75, 42, engColor, { bold: true });
-    txt(s, '（按讚 + 留言）÷ 觀看數', 7.1, 2.88, 5.6, .3, 12, MED);
-
-    // YouTube ad bar
-    box(s, 6.9, 3.28, 6.0, 1.2, CARD, 'CBD5E1', 1);
-    txt(s, 'YouTube 廣告互動率', 7.1, 3.42, 5.6, .38, 14, MED, { bold: true });
-    txt(s, '< 0.5%', 7.1, 3.78, 5.6, .5, 32, MED, { bold: true });
-    txt(s, '（日本手遊市場均價約 ¥10–12 / view）', 7.1, 4.3, 5.6, .3, 12, MED);
-
-    // Engagement ratio callout
-    if (d.totalEng > 0) {
-      const engRatio = Math.round(d.totalEng / 0.5 * 10) / 10;
-      box(s, 6.9, 4.68, 6.0, .88, '0C1A08', GOLD, 1.5);
-      txt(s, '📌  KOC 互動率是 YouTube 廣告的 ' + engRatio + ' 倍', 7.1, 4.8, 5.6, .62, 14, WHITE, { bold: true });
+    // Engagement comparison
+    box(s,.4,5.0,7.9,2.15,CARD,GRN,2);
+    txt(s,'互動率對比',.6,5.15,7.5,.4,15,GRN,{bold:true});
+    txt(s,'KOC 本月影片互動率：'+d.avgVideoEng+'%',.6,5.65,3.5,.45,16,GRN,{bold:true});
+    txt(s,'YouTube 廣告互動率：< 0.5%',.6,6.15,3.5,.45,15,MED);
+    if(d.avgVideoEng>0){
+      var ratio=Math.round(d.avgVideoEng/0.5*10)/10;
+      txt(s,'KOC 是廣告的 '+ratio+' 倍',4.2,5.75,3.9,.65,22,GRN,{bold:true});
     }
 
     // Game comment precision
-    if (d.gameComments > 0 && d.totalComments > 0) {
-      const precision = Math.round(d.gameComments / d.totalComments * 100);
-      box(s, 6.9, 5.7, 6.0, 1.45, CARD, TEAL, 1.5);
-      txt(s, '🎮  精準留言率', 7.1, 5.82, 5.6, .38, 14, TEAL, { bold: true });
-      txt(s, precision + '%', 7.1, 6.18, 2.5, .75, 36, TEAL, { bold: true });
-      txt(s, '留言中 ' + d.gameComments + '/' + d.totalComments + ' 則提到遊戲相關內容', 9.55, 6.32, 3.2, .42, 12, BRIGHT);
+    if(d.gameComments>0&&d.totalComments>0){
+      const prec=Math.round(d.gameComments/d.totalComments*100);
+      box(s,8.5,5.0,4.4,2.15,CARD,TEAL,2);
+      txt(s,'🎮  精準留言率',8.7,5.15,4.0,.4,15,TEAL,{bold:true});
+      txt(s,prec+'%',8.7,5.6,2.5,.8,38,TEAL,{bold:true});
+      txt(s,d.gameComments+'/'+d.totalComments+' 則\n提到遊戲相關內容',11.1,5.75,1.7,.95,12,BODY);
     }
 
-    // CPV context note
-    txt(s, '＊ CPV ¥' + (d.cpv || '—') + ' 購買的是精準玩家的主動觀看，而非廣告的被動曝光，兩者無法直接比較', .4, 7.15, 12.5, .3, 13, MED);
+    // Fee justification
+    txt(s,'＊ CPV ¥'+(d.cpv||'—')+' 購買的是精準手遊玩家的主動觀看；直播的同時在線反映即時互動熱度，兩者皆非被動廣告曝光，不應與廣告 CPM 直接比較',.4,7.18,12.5,.28,12,MED);
   }
 
-  // ── S6 亮點留言  // ── S6 亮點留言 ──
-  if (d.quotes.length > 0) {
-    const s = pres.addSlide(); bg(s); hdr(s, '觀眾真實反應', '評論區代表性留言');
-    const n = Math.min(d.quotes.length, 3), cw = (W - .9) / n;
-    const acs = [TEAL, GOLD, GRN];
-    d.quotes.slice(0, 3).forEach((q, i) => {
-      const x = .45 + i * (cw + .05), ac = acs[i];
-      box(s, x, 1.05, cw, 6.1, CARD, ac, 2); box(s, x, 1.05, cw, .3, ac);
-      txt(s, '"', x + .2, 1.35, 1, 1.1, 68, ac, { bold: true, valign: 'top' });
-      txt(s, q.quote, x + .25, 2.5, cw - .4, 3.0, 14, BRIGHT, { lineSpacingMultiple: 1.5 });
-      if (q.source) txt(s, '— ' + q.source, x + .25, 5.95, cw - .4, .4, 14, ac, { bold: true });
-    });
-  }
-
-  // ── S7 結論與建議 ──
+  // ── S6 費用效益 ──
   {
-    const s = pres.addSlide(); bg(s, 'F0F9FF');
-    box(s, 0, 0, W, .15, PURPLE);
-    txt(s, '結論與建議', .5, .28, 12, .58, 24, WHITE, { bold: true });
+    const s=pres.addSlide(); bg(s); hdr(s,'費用效益分析','合作成本 vs 市場行情',GOLD);
+    box(s,.4,1.05,5.6,2.45,CARD,PALE,1);
+    txt(s,'本月合計費用',.6,1.2,5.2,.4,15,MED,{bold:true});
+    txt(s,'¥'+d.costTotal.toLocaleString(),.6,1.62,5.2,.78,36,INK,{bold:true});
+    txt(s,'影片費 ¥'+d.costVideo.toLocaleString()+'　＋　授權費 ¥'+d.costLicense.toLocaleString(),.6,2.52,5.2,.38,13,MED);
 
-    // Summary stats
-    [
-      { val: d.totalViews.toLocaleString(), lbl: '總觀看數', col: TEAL },
-      { val: d.totalEng + '%', lbl: '互動率', col: GRN },
-      { val: d.cpv ? '¥' + d.cpv : '—', lbl: 'CPV', col: GOLD },
-      { val: d.roiVsYT > 0 ? '×' + d.roiVsYT : '—', lbl: 'vs YouTube廣告', col: PURPLE },
-    ].forEach((st, i) => {
-      const x = .5 + i * 3.2;
-      box(s, x, 1.05, 3.0, 2.1, CARD, st.col, 2);
-      txt(s, st.val, x + .1, 1.15, 2.8, 1.0, 26, st.col, { bold: true, align: 'center' });
-      txt(s, st.lbl, x + .1, 2.18, 2.8, .38, 12, BRIGHT, { bold: true, align: 'center' });
-    });
+    txt(s,'▼',0,3.62,6.4,.6,28,TEAL,{align:'center'});
 
-    // Recommendation boxes
-    const viewPct = d.lm && d.lm.totalViews > 0 ? Math.round((d.totalViews - d.lm.totalViews) / d.lm.totalViews * 100) : null;
-    const rec1Title = viewPct !== null ? (viewPct >= 0 ? '✅ 建議繼續合作' : '⚠️ 建議討論優化') : '📋 首月建立基準';
-    const rec1Body = viewPct !== null
-      ? (viewPct >= 10 ? '本月觀看數成長 +' + viewPct + '%，表現優異。建議下月維持或加碼合作規模。'
-        : viewPct >= 0 ? '本月表現持平（+' + viewPct + '%）。建議維持合作，同時與 KOC 討論內容方向優化。'
-        : '本月觀看數下滑 ' + Math.abs(viewPct) + '%。建議與 KOC 討論標題、縮圖或內容切角的調整。')
-      : '本月為首次記錄，數據將作為後續月份的基準線。';
+    box(s,.4,4.32,5.6,2.85,'F0FDF4',GRN,2);
+    txt(s,'同等影片觀看投 YouTube 廣告約需',.6,4.48,5.2,.4,13,GRN,{bold:true});
+    txt(s,'¥'+d.ytEquiv+'萬',.6,4.9,5.2,.82,36,'059669',{bold:true});
+    txt(s,'基準：日本手遊市場 YouTube 廣告均價約 ¥10 / view',.6,5.82,5.2,.4,12,MED);
+    txt(s,'購買的是精準玩家的主動觀看',.6,6.28,5.2,.4,13,GRN,{bold:true});
 
-    const recs = [
-      { title: rec1Title, body: rec1Body, col: viewPct === null || viewPct >= 0 ? GRN : GOLD },
-      { title: '💰 費用效益評估', body: d.cpv > 0 ? 'CPV ¥' + d.cpv + '，購買的是精準手遊玩家的主動觀看。KOC 合作觸及真實 TA，互動率達 ' + d.totalEng + '%，遠高於 YouTube 廣告的 < 0.5%，整體效益良好。' : '本月無費用數據，請填入費用以計算效益。', col: PURPLE },
-      { title: '📅 下月建議', body: '建議下月繼續追蹤：觀看數趨勢、互動率變化、觀眾留言質量。' + (d.costLicense > 0 ? '廣告授權費 ¥' + d.costLicense.toLocaleString() + '，確認授權期限是否涵蓋下月素材使用需求。' : ''), col: TEAL },
-    ];
+    box(s,6.5,1.05,6.4,3.05,'FFFBEB',GOLD,2);
+    txt(s,'影片 CPV',6.7,1.22,6.0,.42,15,GOLD,{bold:true,align:'center'});
+    txt(s,d.cpv?'¥'+d.cpv:'—',6.7,1.62,6.0,1.55,68,GOLD,{bold:true,align:'center'});
+    txt(s,'vs 市場均價 ¥10',6.7,3.1,6.0,.35,13,MED,{align:'center'});
 
-    recs.forEach((r, i) => {
-      const x = .5 + i * 4.25;
-      box(s, x, 3.35, 4.05, 3.8, CARD, r.col, 1.5);
-      txt(s, r.title, x + .18, 3.48, 3.7, .42, 13, WHITE, { bold: true });
-      txt(s, r.body, x + .18, 4.0, 3.7, 2.9, 12, BRIGHT, { lineSpacingMultiple: 1.45 });
-    });
-
-    txt(s, d.month + '　' + d.kocName, .5, 7.1, 12.3, .32, 13, MED);
+    box(s,6.5,4.32,6.4,2.85,'F5F3FF',PURPLE,1.5);
+    txt(s,'費用效益評估',6.7,4.5,6.0,.4,15,PURPLE,{bold:true});
+    const cpvNote=d.cpv>0?'CPV ¥'+d.cpv+'，購買的是精準手遊玩家的主動觀看。KOC 合作觸及真實 TA，影片互動率達 '+d.avgVideoEng+'%，遠高於 YouTube 廣告的 < 0.5%，整體效益良好。':'本月無費用數據，請填入費用以計算效益指標。';
+    txt(s,cpvNote,6.7,5.0,6.0,1.85,13,BODY,{lineSpacingMultiple:1.5});
   }
 
-  await pres.writeFile({ fileName: d.kocName + '_月報_' + d.month + '.pptx' });
+  // ── S7 亮點留言 ──
+  if(d.quotes.length>0){
+    const s=pres.addSlide(); bg(s); hdr(s,'觀眾真實反應','影片評論 × 直播聊天室',TEAL);
+    const n=Math.min(d.quotes.length,3), cw=(W-.9)/n;
+    const acs=[TEAL,PURPLE,GRN];
+    d.quotes.slice(0,3).forEach((q,i)=>{
+      const x=.45+i*(cw+.05), ac=acs[i];
+      box(s,x,1.0,cw,6.15,CARD,ac,2); box(s,x,1.0,cw,.28,ac);
+      txt(s,'"',x+.2,1.3,1,1.1,64,ac,{bold:true,valign:'top'});
+      txt(s,q.quote,x+.25,2.45,cw-.4,3.1,14,BODY,{lineSpacingMultiple:1.5});
+      if(q.source)txt(s,'— '+q.source,x+.25,5.92,cw-.4,.38,13,ac,{bold:true});
+    });
+  }
+
+  // ── S8 結論與建議 ──
+  {
+    const s=pres.addSlide(); bg(s,'F0F4FF');
+    box(s,0,0,W,.15,PURPLE);
+    txt(s,'結論與建議',.5,.28,12,.55,24,INK,{bold:true});
+
+    // Summary row
+    const sStats=[];
+    if(d.totalVideoViews)sStats.push({val:d.totalVideoViews.toLocaleString(),lbl:'影片觀看',col:TEAL});
+    if(d.avgVideoEng)sStats.push({val:d.avgVideoEng+'%',lbl:'互動率',col:GRN});
+    if(d.totalLivePeak)sStats.push({val:d.totalLivePeak.toLocaleString(),lbl:'直播峰值',col:LIVE});
+    if(d.cpv)sStats.push({val:'¥'+d.cpv,lbl:'CPV',col:GOLD});
+    const sw2=(W-1.0)/Math.max(sStats.length,1)-.15;
+    sStats.forEach((st,i)=>{
+      const x=.5+i*(sw2+.15);
+      box(s,x,1.05,sw2,1.85,CARD,st.col,2);
+      txt(s,st.val,x+.1,1.15,sw2-.2,.9,24,st.col,{bold:true,align:'center'});
+      txt(s,st.lbl,x+.1,2.1,sw2-.2,.35,13,BODY,{bold:true,align:'center'});
+    });
+
+    // 3 recommendation boxes
+    const viewPct=d.lm&&d.lm.videoViews>0?Math.round((d.totalVideoViews-d.lm.videoViews)/d.lm.videoViews*100):null;
+    const r1={title:viewPct===null?'📋 首月建立基準':viewPct>=0?'✅ 建議繼續合作':'⚠️ 建議討論優化',
+      body:viewPct===null?'本月為首次記錄，數據將作為後續月份的基準線，建議持續追蹤三個月建立趨勢。':
+        viewPct>=10?'影片觀看數月增 +'+viewPct+'%，表現優異。建議下月維持或加碼合作規模。':
+        viewPct>=0?'影片表現持平（+'+viewPct+'%）。建議維持合作，同時與 KOC 討論新的內容切角。':
+        '影片觀看下滑 '+Math.abs(viewPct)+'%。建議與 KOC 討論標題、縮圖或內容方向的調整。',col:viewPct===null||viewPct>=0?GRN:GOLD};
+    const r2={title:'💰 費用效益評估',body:d.cpv>0?'CPV ¥'+d.cpv+'，購買的是精準手遊玩家主動觀看。影片互動率 '+d.avgVideoEng+'%，遠高於廣告的 < 0.5%，合作價值良好。':'請填入費用數據以進行效益評估。',col:PURPLE};
+    const r3={title:'📅 下月執行建議',body:'建議追蹤：影片觀看趨勢、直播同時在線變化、互動留言質量。'+(d.costLicense>0?'廣告授權費 ¥'+d.costLicense.toLocaleString()+'，請確認授權期限是否涵蓋下月素材使用。':''),col:TEAL};
+
+    [r1,r2,r3].forEach((r,i)=>{
+      const x=.5+i*4.25;
+      box(s,x,3.15,4.05,3.95,CARD,r.col,1.5);
+      txt(s,r.title,x+.18,3.3,3.7,.42,13,INK,{bold:true});
+      txt(s,r.body,x+.18,3.85,3.7,3.05,12,BODY,{lineSpacingMultiple:1.5});
+    });
+
+    txt(s,d.month+'　'+d.kocName,.5,7.12,12,.3,13,MED);
+  }
+
+  await pres.writeFile({fileName: d.kocName+'_月報_'+d.month+'.pptx'});
 }
 </script>
 </body>
